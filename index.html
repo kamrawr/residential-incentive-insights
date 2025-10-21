@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Residential Incentive Insights – Interactive</title>
+<style>
+  :root{
+    --bg:#0b0e12; --panel:#11161d; --muted:#8aa0b3;
+    --text:#e8eef5; --accent:#7dd3fc; --accent2:#a3e635;
+    --danger:#f87171; --good:#34d399; --warn:#fbbf24; --chip:#1b2531;
+    --card:#0f141b; --border:#1e2a38; --focus:#60a5fa;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,"Helvetica Neue",Arial}
+  header{position:sticky;top:0;z-index:30;background:linear-gradient(180deg,rgba(11,14,18,.95),rgba(11,14,18,.7));backdrop-filter:blur(6px);border-bottom:1px solid var(--border)}
+  .wrap{max-width:1100px;margin:0 auto;padding:16px}
+  h1{font-size:20px;margin:0 0 6px 0}
+  .sub{color:var(--muted);font-size:13px}
+  .toolbar{display:grid;grid-template-columns:1fr 200px 220px;gap:8px;margin-top:12px}
+  input[type="search"], select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--panel);color:var(--text);outline:none}
+  input[type="search"]:focus, select:focus{border-color:var(--focus);box-shadow:0 0 0 3px rgba(96,165,250,.2)}
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin:16px auto}
+  .card{grid-column:span 12;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px}
+  @media (min-width:860px){.card{grid-column:span 6}}
+  .card h3{margin:0 0 8px 0;font-size:16px}
+  .chip{display:inline-flex;align-items:center;gap:6px;background:var(--chip);color:var(--muted);padding:6px 10px;border-radius:999px;font-size:12px;border:1px solid var(--border);margin-right:6px}
+  .chip .dot{width:8px;height:8px;border-radius:50%}
+  .dot.good{background:var(--good)} .dot.warn{background:var(--warn)} .dot.danger{background:var(--danger)}
+  .kv{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 10px 0}
+  .kv .pill{background:var(--panel);border:1px solid var(--border);padding:6px 10px;border-radius:999px;color:var(--muted);font-size:12px}
+  .aud-block{display:grid;grid-template-columns:1fr;gap:10px}
+  .aud{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:10px}
+  .aud h4{margin:0 0 8px 0;font-size:13px;letter-spacing:.2px;color:#cfd9e3}
+  .aud ul{margin:0;padding-left:18px} .aud li{margin:4px 0}
+  .muted{color:var(--muted)}
+  .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  button{cursor:pointer;background:var(--chip);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:10px}
+  button:hover{border-color:var(--focus)}
+  .footer{color:var(--muted);font-size:12px;margin:22px 0}
+  .hide{display:none}
+  .tag{font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid var(--border);background:#0d131a;color:#a7bdcf}
+  .tag.green{color:#a7f3d0;border-color:#065f46;background:#052e2a}
+  .tag.blue{color:#bae6fd;border-color:#075985;background:#06263a}
+  .tag.yellow{color:#fde68a;border-color:#854d0e;background:#2b1e07}
+  .badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#9fb6c8;background:#0d1520;border:1px solid var(--border);padding:4px 8px;border-radius:999px}
+  .sep{height:1px;background:var(--border);margin:10px 0}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Residential Incentive Insights</h1>
+    <div class="sub">Choose a <b>Project Type</b> and <b>Audience</b>. Get concise, data-driven guidance for action.</div>
+    <div class="toolbar">
+      <input id="q" type="search" placeholder="Quick search (e.g., ductless, windows, CPF, SWR, audit)"/>
+      <select id="project">
+        <option value="all">All Project Types</option>
+      </select>
+      <select id="aud">
+        <option value="all">Audience: Program + Homeowner + Contractor</option>
+        <option value="program_manager">Program Manager</option>
+        <option value="homeowner">Homeowner</option>
+        <option value="contractor">Contractor</option>
+      </select>
+    </div>
+    <div class="row">
+      <span class="badge">Tip: Use URL hashes like <code>#heat_pumps?aud=homeowner</code> to deep-link.</span>
+      <button id="btnCopy">Copy Visible Insights</button>
+      <button id="btnExport">Export Visible JSON</button>
+      <span id="msg" class="badge hide"></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="cards" class="grid"></div>
+  <div class="footer">
+    Built for quick, offline field use. Costs are typical ranges; always verify current specs and PI sheets before quoting.
+  </div>
+</main>
+
+<script>
+/** ---------- DATA (from your refined, practical JSON) ---------- **/
+const DATA = {
+  heat_pumps: {
+    title: "Heat Pumps (ductless, ducted, extended-capacity)",
+    summary: "High-impact electrification; strong savings; tiered incentives.",
+    impact_tags: ["High impact","Electrification"],
+    cost_and_incentive_ratio: {
+      average_cost_usd: "2500–15000",
+      standard_incentive_usd: 800,
+      coverage_percent: "16–37%",
+      swr_cpf_coverage_percent: "36–100%"
+    },
+    equity_and_market_leverage: [
+      "CPF & no-cost tiers remove upfront barriers.",
+      "Standard tier responds to financing + insulation bundles."
+    ],
+    implementation_priorities: [
+      "HSPF2 ≥ 8.1; correct sizing; aux heat lockout ≤ 35°F.",
+      "QA/QC via trade-ally network; target resistance or FA electric homes."
+    ],
+    stakeholder_value: {
+      program_manager: [
+        "Bundle with insulation to maximize realized savings.",
+        "Track adoption; consider on-bill financing for market-rate."
+      ],
+      homeowner: [
+        "Cuts heating/cooling bills 30–50%.",
+        "SWR reduces cost; CPF can be no-cost."
+      ],
+      contractor: [
+        "Pre-approval for CPF; load calcs + photos.",
+        "Commissioning & homeowner maintenance guidance."
+      ]
+    }
+  },
+
+  gas_heating_systems: {
+    title: "Gas Heating Systems (furnaces & fireplaces)",
+    summary: "Mature measure; useful for safety/compliance; lower energy impact.",
+    impact_tags: ["Moderate impact","Combustion"],
+    cost_and_incentive_ratio: {
+      furnace_cost_usd: "3000–7500",
+      furnace_incentive_usd: "1600–2900",
+      coverage_percent: "32–58%",
+      fireplace_cost_usd: "2000–5000",
+      fireplace_incentive_usd: "150–250"
+    },
+    equity_and_market_leverage: [
+      "Higher rental incentives improve equity reach.",
+      "Fireplace incentives have low energy value; consider deprioritization."
+    ],
+    implementation_priorities: [
+      "AFUE ≥ 95%; CO monitors; sealed combustion; proper venting.",
+      "Coordinate gas utility eligibility."
+    ],
+    stakeholder_value: {
+      program_manager: [
+        "Focus funding on safety/rental stock; watch free-ridership.",
+        "Shift fireplace funds to higher-savings measures if needed."
+      ],
+      homeowner: [
+        "Reliable comfort; better for gas-dependent homes.",
+        "Fireplaces are mostly aesthetic; long payback."
+      ],
+      contractor: [
+        "Document AFUE, CO monitor, venting; code compliance.",
+        "Provide commissioning reports to support rebates."
+      ]
+    }
+  },
+
+  water_heating_systems: {
+    title: "Water Heating (heat-pump & tankless gas)",
+    summary: "Moderate savings; best when bundled with electrification.",
+    impact_tags: ["Medium impact","Hot water"],
+    cost_and_incentive_ratio: {
+      hpwh_cost_usd: "3600–6500",
+      hpwh_incentive_usd: 240,
+      tankless_cost_usd: "1200–3500",
+      tankless_incentive_usd: 400
+    },
+    equity_and_market_leverage: [
+      "CPF can fully fund HPWH in priority communities.",
+      "HPWH aligns with decarbonization; tankless suits transition homes."
+    ],
+    implementation_priorities: [
+      "Check electric capacity (30A), space, condensate for HPWH.",
+      "Target end-of-life electric tanks; manage refrigerant + noise."
+    ],
+    stakeholder_value: {
+      program_manager: [
+        "Bundle HPWH with heat pump or panel upgrades for scale.",
+        "Use CPF to overcome upfront barriers."
+      ],
+      homeowner: [
+        "Lower operating cost; quiet, efficient.",
+        "CPF may eliminate upfront cost."
+      ],
+      contractor: [
+        "Pre-site checks (power, drain, airflow).",
+        "Customer orientation on temp/filters."
+      ]
+    }
+  },
+
+  insulation_and_envelope: {
+    title: "Insulation & Envelope (attic, wall, floor)",
+    summary: "Highest $/savings; prerequisite for heat-pump performance.",
+    impact_tags: ["Very high impact","Weatherization"],
+    cost_and_incentive_ratio: {
+      average_cost_per_sqft_usd: "1.0–4.5",
+      standard_coverage: "50–60%",
+      swr_cpf_coverage: "60–120%",
+      certa_fund_usd: 2000
+    },
+    equity_and_market_leverage: [
+      "CPF + CERTA remove structural barriers (wiring, rot, moisture).",
+      "Link with health/IAQ funding to widen access."
+    ],
+    implementation_priorities: [
+      "Audit R-values; insulate to R-38 attic, R-30 floor (SF), R-22 (MH).",
+      "Add air-sealing, ventilation; photo & sqft documentation."
+    ],
+    stakeholder_value: {
+      program_manager: [
+        "Target worst-insulated homes for highest returns.",
+        "Use CERTA to unlock 'stuck' projects."
+      ],
+      homeowner: [
+        "Comfort year-round; big bill savings; often $0 under CPF.",
+        "SWR typically halves out-of-pocket cost."
+      ],
+      contractor: [
+        "Address rim joists & knee walls; vapor details matter.",
+        "Follow CERTA workflow for enabling repairs."
+      ]
+    }
+  },
+
+  windows: {
+    title: "Windows",
+    summary: "High comfort; low financial payback; equity-driven use case.",
+    impact_tags: ["Comfort","Low energy ROI"],
+    cost_and_incentive_ratio: {
+      avg_window_cost_usd: 600,
+      incentive_per_sqft_usd: "1.0–1.5",
+      coverage_percent: "2–3%"
+    },
+    equity_and_market_leverage: [
+      "CPF enhanced windows may cover full cost with co-funding.",
+      "Prioritize single-pane / metal-framed double-pane homes."
+    ],
+    implementation_priorities: [
+      "Verify U-value tiers (≤0.22 or 0.23–0.27).",
+      "Bundle with air-sealing; ensure flashing & drainage plane."
+    ],
+    stakeholder_value: {
+      program_manager: [
+        "Use selectively for health/condensation, noise, or safety drivers.",
+        "Favor CPF projects where co-funding exists."
+      ],
+      homeowner: [
+        "Major comfort upgrade; less bill impact unless replacing single-pane.",
+        "CPF may enable no-cost installs."
+      ],
+      contractor: [
+        "U-factor documentation; measure conditions correctly.",
+        "Educate on ventilation to manage condensation."
+      ]
+    }
+  },
+
+  controls_and_thermostats: {
+    title: "Controls & Thermostats",
+    summary: "Low-cost, high-payback; boosts HVAC performance.",
+    impact_tags: ["High ROI","Behavior + control"],
+    cost_and_incentive_ratio: {
+      device_cost_usd: "113–239",
+      incentive_usd: 250,
+      coverage_percent: "≈100%"
+    },
+    equity_and_market_leverage: [
+      "CPF direct-install enables instant comfort and savings.",
+      "Pair with heat pumps to curb auxiliary heat."
+    ],
+    implementation_priorities: [
+      "Maintain approved model list & compatibility matrix.",
+      "Set heat-pump lockout ≤ 35°F; verify Wi-Fi/app setup."
+    ],
+    stakeholder_value: {
+      program_manager: [
+        "Great uptake driver; keep funded as a bundle.",
+        "Track persistence with follow-up nudges."
+      ],
+      homeowner: [
+        "8–15% energy reduction; better comfort & control.",
+        "Often free after incentive."
+      ],
+      contractor: [
+        "Fast install; strong add-on to HVAC quotes.",
+        "Provide brief training for satisfaction."
+      ]
+    }
+  },
+
+  home_energy_assessment_and_certa: {
+    title: "Home Energy Assessment & CERTA",
+    summary: "Gateway service; aligns projects and funding.",
+    impact_tags: ["Enablement","Pipeline"],
+    cost_and_incentive_ratio: {
+      audit_cost_usd: "439–615",
+      rebate_usd: "250–500",
+      coverage_percent: "50–100%",
+      certa_funding_usd: 2000
+    },
+    equity_and_market_leverage: [
+      "CERTA removes repair barriers (e.g., wiring, rot).",
+      "Full audit coverage for CPF/multifamily expands equity."
+    ],
+    implementation_priorities: [
+      "Standardize report & digital submission.",
+      "Integrate with project tracking & referrals."
+    ],
+    stakeholder_value: {
+      program_manager: [
+        "Use audits to prioritize multi-measure pathways.",
+        "Coordinate cross-funders for stackable support."
+      ],
+      homeowner: [
+        "Clear roadmap of upgrades & rebates.",
+        "Repairs covered via CERTA can 'unlock' insulation."
+      ],
+      contractor: [
+        "Certified only; ensure complete data capture.",
+        "Plan multifamily logistics and documentation."
+      ]
+    }
+  }
+};
+
+/** ---------- UTILITIES ---------- **/
+const byKey = (obj, key) => obj[key];
+const fmtMoney = v => (typeof v === "number" ? `$${v.toLocaleString()}` : v);
+const html = (strings, ...vals) => strings.map((s,i)=>s+(vals[i]??"")).join("");
+
+const PROJECT_OPTIONS = Object.entries(DATA).map(([k,v])=>({value:k,label:v.title}));
+
+/** ---------- RENDER ---------- **/
+const cardsEl = document.getElementById("cards");
+const qEl = document.getElementById("q");
+const projectEl = document.getElementById("project");
+const audEl = document.getElementById("aud");
+const msgEl = document.getElementById("msg");
+
+function initSelectors(){
+  PROJECT_OPTIONS.forEach(opt=>{
+    const o=document.createElement("option");
+    o.value=opt.value; o.textContent=opt.label;
+    projectEl.appendChild(o);
+  });
+}
+
+function badgeDots(key){
+  // heuristic badges
+  const map = {
+    "High impact":"good","Very high impact":"good","High ROI":"good",
+    "Comfort":"warn","Low energy ROI":"warn","Combustion":"danger"
+  };
+  return map[key]||"warn";
+}
+
+function renderCards(){
+  const query = qEl.value.trim().toLowerCase();
+  const selProject = projectEl.value;
+  const selAud = audEl.value;
+
+  // build list
+  let items = Object.entries(DATA).map(([k,v])=>({key:k, ...v}));
+
+  // filter project
+  if(selProject!=="all"){
+    items = items.filter(i=>i.key===selProject);
+  }
+
+  // search query across title, summary, tags and audience text
+  if(query){
+    items = items.filter(i=>{
+      const hay = [
+        i.title, i.summary, ...(i.impact_tags||[]),
+        ...(i.equity_and_market_leverage||[]),
+        ...(i.implementation_priorities||[]),
+        ...((i.stakeholder_value?.program_manager)||[]),
+        ...((i.stakeholder_value?.homeowner)||[]),
+        ...((i.stakeholder_value?.contractor)||[])
+      ].join(" ").toLowerCase();
+      return hay.includes(query);
+    });
+  }
+
+  cardsEl.innerHTML = "";
+
+  items.forEach(item=>{
+    const {title, summary, impact_tags=[], cost_and_incentive_ratio={}, equity_and_market_leverage=[], implementation_priorities=[]} = item;
+
+    const costPills = Object.entries(cost_and_incentive_ratio).map(([k,v])=>{
+      const label = k.replace(/_/g," ").replace(/\b\w/g,c=>c.toUpperCase());
+      return `<span class="pill" title="${label}">${label}: ${typeof v==='object'?JSON.stringify(v):fmtMoney(v)}</span>`;
+    }).join("");
+
+    const tags = impact_tags.map(t=>`<span class="chip"><span class="dot ${badgeDots(t)}"></span>${t}</span>`).join("");
+
+    // audience blocks
+    const showPM = (selAud==="all" || selAud==="program_manager");
+    const showHO = (selAud==="all" || selAud==="homeowner");
+    const showCT = (selAud==="all" || selAud==="contractor");
+
+    const pm = (item.stakeholder_value?.program_manager||[]).map(li=>`<li>${li}</li>`).join("") || "<li class='muted'>No items</li>";
+    const ho = (item.stakeholder_value?.homeowner||[]).map(li=>`<li>${li}</li>`).join("") || "<li class='muted'>No items</li>";
+    const ct = (item.stakeholder_value?.contractor||[]).map(li=>`<li>${li}</li>`).join("") || "<li class='muted'>No items</li>";
+
+    const eq = (equity_and_market_leverage||[]).map(x=>`<span class="tag green">${x}</span>`).join("");
+    const impl = (implementation_priorities||[]).map(x=>`<span class="tag blue">${x}</span>`).join("");
+
+    const card = document.createElement("section");
+    card.className = "card";
+    card.dataset.key = item.key;
+
+    card.innerHTML = html`
+      <h3>${title}</h3>
+      <div class="muted">${summary}</div>
+      <div class="row" style="margin-top:8px">${tags}</div>
+
+      <div class="kv">${costPills}</div>
+
+      <div class="row">${eq}</div>
+      <div style="height:6px"></div>
+      <div class="row">${impl}</div>
+
+      <div class="sep"></div>
+
+      <div class="aud-block">
+        ${showPM ? `<div class="aud"><h4>Program Manager</h4><ul>${pm}</ul></div>` : ``}
+        ${showHO ? `<div class="aud"><h4>Homeowner</h4><ul>${ho}</ul></div>` : ``}
+        ${showCT ? `<div class="aud"><h4>Contractor</h4><ul>${ct}</ul></div>` : ``}
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <button class="btnCopyCard">Copy Card</button>
+        <button class="btnJson">View JSON</button>
+        <button class="btnLink">Copy Deep Link</button>
+      </div>
+    `;
+
+    // button handlers
+    card.querySelector(".btnCopyCard").onclick = ()=>{
+      const text = card.innerText.replace(/\n{2,}/g,"\n").trim();
+      navigator.clipboard.writeText(text);
+      flash("Copied card text");
+    };
+    card.querySelector(".btnJson").onclick = ()=>{
+      const pretty = JSON.stringify(DATA[item.key], null, 2);
+      const blob = new Blob([pretty], {type:"application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = `${item.key}.json`; a.click();
+      setTimeout(()=>URL.revokeObjectURL(url), 1500);
+    };
+    card.querySelector(".btnLink").onclick = ()=>{
+      const u = new URL(location.href);
+      u.hash = `${item.key}?aud=${audEl.value}`;
+      navigator.clipboard.writeText(u.toString());
+      flash("Deep link copied");
+    };
+
+    cardsEl.appendChild(card);
+  });
+
+  if(items.length===0){
+    const empty = document.createElement("div");
+    empty.className="card";
+    empty.innerHTML = `<div class="muted">No results. Try clearing filters or using broader keywords.</div>`;
+    cardsEl.appendChild(empty);
+  }
+}
+
+function flash(text){
+  msgEl.textContent = text;
+  msgEl.classList.remove("hide");
+  setTimeout(()=>msgEl.classList.add("hide"), 1800);
+}
+
+function exportVisibleJSON(){
+  const selProject = projectEl.value;
+  const selAud = audEl.value;
+  const q = qEl.value.trim().toLowerCase();
+  let items = Object.entries(DATA).map(([k,v])=>({k,v}));
+  if(selProject!=="all") items = items.filter(i=>i.k===selProject);
+  if(q){
+    items = items.filter(({v})=>{
+      const hay = [
+        v.title, v.summary, ...(v.impact_tags||[]),
+        ...(v.equity_and_market_leverage||[]),
+        ...(v.implementation_priorities||[]),
+        ...((v.stakeholder_value?.program_manager)||[]),
+        ...((v.stakeholder_value?.homeowner)||[]),
+        ...((v.stakeholder_value?.contractor)||[])
+      ].join(" ").toLowerCase();
+      return hay.includes(q);
+    });
+  }
+  // If audience filter is set, trim the stakeholder_value block
+  const pruned = {};
+  items.forEach(({k,v})=>{
+    const copy = JSON.parse(JSON.stringify(v));
+    if(selAud!=="all"){
+      copy.stakeholder_value = { [selAud]: v.stakeholder_value?.[selAud] || [] };
+    }
+    pruned[k]=copy;
+  });
+  const blob = new Blob([JSON.stringify(pruned,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href=url; a.download="visible_insights.json"; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+
+// deep link support: #heat_pumps?aud=homeowner
+function applyDeepLink(){
+  if(!location.hash) return;
+  const [hash, query] = location.hash.slice(1).split("?");
+  if(hash && DATA[hash]) projectEl.value = hash;
+  if(query){
+    const params = new URLSearchParams(query);
+    const aud = params.get("aud");
+    if(aud && ["all","program_manager","homeowner","contractor"].includes(aud)) audEl.value = aud;
+    const qStr = params.get("q"); if(qStr) qEl.value = qStr;
+  }
+}
+
+document.getElementById("btnCopy").onclick = ()=>{
+  const t = Array.from(document.querySelectorAll(".card")).map(c=>c.innerText).join("\n\n---\n\n");
+  navigator.clipboard.writeText(t); flash("Copied visible insights");
+};
+document.getElementById("btnExport").onclick = exportVisibleJSON;
+
+qEl.addEventListener("input", renderCards);
+projectEl.addEventListener("change", ()=>{
+  // update hash
+  const u = new URL(location.href);
+  u.hash = projectEl.value==="all" ? "" : `${projectEl.value}?aud=${audEl.value}`;
+  history.replaceState(null,"",u);
+  renderCards();
+});
+audEl.addEventListener("change", ()=>{
+  const u = new URL(location.href);
+  const key = projectEl.value==="all" ? "" : projectEl.value;
+  u.hash = key ? `${key}?aud=${audEl.value}` : `#?aud=${audEl.value}`;
+  history.replaceState(null,"",u);
+  renderCards();
+});
+
+// init
+initSelectors();
+applyDeepLink();
+renderCards();
+</script>
+</body>
+</html>

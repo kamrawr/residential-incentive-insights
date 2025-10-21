@@ -1,0 +1,232 @@
+{
+  "heat_pumps": {
+    "title": "Heat Pumps (ductless, ducted, extended-capacity)",
+    "summary": "High-impact electrification; strong savings; tiered incentives.",
+    "impact_tags": ["High impact", "Electrification"],
+    "cost_and_incentive_ratio": {
+      "average_cost_usd": "2500–15000",
+      "standard_incentive_usd": 800,
+      "coverage_percent": "16–37%",
+      "swr_cpf_coverage_percent": "36–100%"
+    },
+    "equity_and_market_leverage": [
+      "CPF & no-cost tiers remove upfront barriers.",
+      "Standard tier responds to financing + insulation bundles."
+    ],
+    "implementation_priorities": [
+      "HSPF2 ≥ 8.1; correct sizing; aux heat lockout ≤ 35°F.",
+      "QA/QC via trade-ally network; target resistance or FA electric homes."
+    ],
+    "stakeholder_value": {
+      "program_manager": [
+        "Bundle with insulation to maximize realized savings.",
+        "Track adoption; consider on-bill financing for market-rate."
+      ],
+      "homeowner": [
+        "Cuts heating/cooling bills 30–50%.",
+        "SWR reduces cost; CPF can be no-cost."
+      ],
+      "contractor": [
+        "Pre-approval for CPF; load calcs + photos.",
+        "Commissioning & homeowner maintenance guidance."
+      ]
+    }
+  },
+  "gas_heating_systems": {
+    "title": "Gas Heating Systems (furnaces & fireplaces)",
+    "summary": "Mature measure; useful for safety/compliance; lower energy impact.",
+    "impact_tags": ["Moderate impact", "Combustion"],
+    "cost_and_incentive_ratio": {
+      "furnace_cost_usd": "3000–7500",
+      "furnace_incentive_usd": "1600–2900",
+      "coverage_percent": "32–58%",
+      "fireplace_cost_usd": "2000–5000",
+      "fireplace_incentive_usd": "150–250"
+    },
+    "equity_and_market_leverage": [
+      "Higher rental incentives improve equity reach.",
+      "Fireplace incentives have low energy value; consider deprioritization."
+    ],
+    "implementation_priorities": [
+      "AFUE ≥ 95%; CO monitors; sealed combustion; proper venting.",
+      "Coordinate gas utility eligibility."
+    ],
+    "stakeholder_value": {
+      "program_manager": [
+        "Focus funding on safety/rental stock; watch free-ridership.",
+        "Shift fireplace funds to higher-savings measures if needed."
+      ],
+      "homeowner": [
+        "Reliable comfort; better for gas-dependent homes.",
+        "Fireplaces are mostly aesthetic; long payback."
+      ],
+      "contractor": [
+        "Document AFUE, CO monitor, venting; code compliance.",
+        "Provide commissioning reports to support rebates."
+      ]
+    }
+  },
+  "water_heating_systems": {
+    "title": "Water Heating (heat-pump & tankless gas)",
+    "summary": "Moderate savings; best when bundled with electrification.",
+    "impact_tags": ["Medium impact", "Hot water"],
+    "cost_and_incentive_ratio": {
+      "hpwh_cost_usd": "3600–6500",
+      "hpwh_incentive_usd": 240,
+      "tankless_cost_usd": "1200–3500",
+      "tankless_incentive_usd": 400
+    },
+    "equity_and_market_leverage": [
+      "CPF can fully fund HPWH in priority communities.",
+      "HPWH aligns with decarbonization; tankless suits transition homes."
+    ],
+    "implementation_priorities": [
+      "Check electric capacity (30A), space, condensate for HPWH.",
+      "Target end-of-life electric tanks; manage refrigerant + noise."
+    ],
+    "stakeholder_value": {
+      "program_manager": [
+        "Bundle HPWH with heat pump or panel upgrades for scale.",
+        "Use CPF to overcome upfront barriers."
+      ],
+      "homeowner": [
+        "Lower operating cost; quiet, efficient.",
+        "CPF may eliminate upfront cost."
+      ],
+      "contractor": [
+        "Pre-site checks (power, drain, airflow).",
+        "Customer orientation on temp/filters."
+      ]
+    }
+  },
+  "insulation_and_envelope": {
+    "title": "Insulation & Envelope (attic, wall, floor)",
+    "summary": "Highest $/savings; prerequisite for heat-pump performance.",
+    "impact_tags": ["Very high impact", "Weatherization"],
+    "cost_and_incentive_ratio": {
+      "average_cost_per_sqft_usd": "1.0–4.5",
+      "standard_coverage": "50–60%",
+      "swr_cpf_coverage": "60–120%",
+      "certa_fund_usd": 2000
+    },
+    "equity_and_market_leverage": [
+      "CPF + CERTA remove structural barriers (wiring, rot, moisture).",
+      "Link with health/IAQ funding to widen access."
+    ],
+    "implementation_priorities": [
+      "Audit R-values; insulate to R-38 attic, R-30 floor (SF), R-22 (MH).",
+      "Add air-sealing, ventilation; photo & sqft documentation."
+    ],
+    "stakeholder_value": {
+      "program_manager": [
+        "Target worst-insulated homes for highest returns.",
+        "Use CERTA to unlock 'stuck' projects."
+      ],
+      "homeowner": [
+        "Comfort year-round; big bill savings; often $0 under CPF.",
+        "SWR typically halves out-of-pocket cost."
+      ],
+      "contractor": [
+        "Address rim joists & knee walls; vapor details matter.",
+        "Follow CERTA workflow for enabling repairs."
+      ]
+    }
+  },
+  "windows": {
+    "title": "Windows",
+    "summary": "High comfort; low financial payback; equity-driven use case.",
+    "impact_tags": ["Comfort", "Low energy ROI"],
+    "cost_and_incentive_ratio": {
+      "avg_window_cost_usd": 600,
+      "incentive_per_sqft_usd": "1.0–1.5",
+      "coverage_percent": "2–3%"
+    },
+    "equity_and_market_leverage": [
+      "CPF enhanced windows may cover full cost with co-funding.",
+      "Prioritize single-pane / metal-framed double-pane homes."
+    ],
+    "implementation_priorities": [
+      "Verify U-value tiers (≤0.22 or 0.23–0.27).",
+      "Bundle with air-sealing; ensure flashing & drainage plane."
+    ],
+    "stakeholder_value": {
+      "program_manager": [
+        "Use selectively for health/condensation, noise, or safety drivers.",
+        "Favor CPF projects where co-funding exists."
+      ],
+      "homeowner": [
+        "Major comfort upgrade; less bill impact unless replacing single-pane.",
+        "CPF may enable no-cost installs."
+      ],
+      "contractor": [
+        "U-factor documentation; measure conditions correctly.",
+        "Educate on ventilation to manage condensation."
+      ]
+    }
+  },
+  "controls_and_thermostats": {
+    "title": "Controls & Thermostats",
+    "summary": "Low-cost, high-payback; boosts HVAC performance.",
+    "impact_tags": ["High ROI", "Behavior + control"],
+    "cost_and_incentive_ratio": {
+      "device_cost_usd": "113–239",
+      "incentive_usd": 250,
+      "coverage_percent": "≈100%"
+    },
+    "equity_and_market_leverage": [
+      "CPF direct-install enables instant comfort and savings.",
+      "Pair with heat pumps to curb auxiliary heat."
+    ],
+    "implementation_priorities": [
+      "Maintain approved model list & compatibility matrix.",
+      "Set heat-pump lockout ≤ 35°F; verify Wi-Fi/app setup."
+    ],
+    "stakeholder_value": {
+      "program_manager": [
+        "Great uptake driver; keep funded as a bundle.",
+        "Track persistence with follow-up nudges."
+      ],
+      "homeowner": [
+        "8–15% energy reduction; better comfort & control.",
+        "Often free after incentive."
+      ],
+      "contractor": [
+        "Fast install; strong add-on to HVAC quotes.",
+        "Provide brief training for satisfaction."
+      ]
+    }
+  },
+  "home_energy_assessment_and_certa": {
+    "title": "Home Energy Assessment & CERTA",
+    "summary": "Gateway service; aligns projects and funding.",
+    "impact_tags": ["Enablement", "Pipeline"],
+    "cost_and_incentive_ratio": {
+      "audit_cost_usd": "439–615",
+      "rebate_usd": "250–500",
+      "coverage_percent": "50–100%",
+      "certa_funding_usd": 2000
+    },
+    "equity_and_market_leverage": [
+      "CERTA removes repair barriers (e.g., wiring, rot).",
+      "Full audit coverage for CPF/multifamily expands equity."
+    ],
+    "implementation_priorities": [
+      "Standardize report & digital submission.",
+      "Integrate with project tracking & referrals."
+    ],
+    "stakeholder_value": {
+      "program_manager": [
+        "Use audits to prioritize multi-measure pathways.",
+        "Coordinate cross-funders for stackable support."
+      ],
+      "homeowner": [
+        "Clear roadmap of upgrades & rebates.",
+        "Repairs covered via CERTA can 'unlock' insulation."
+      ],
+      "contractor": [
+        "Certified only; ensure complete data capture.",
+        "Plan multifamily logistics and documentation."
+      ]
+    }
+  }
+}
