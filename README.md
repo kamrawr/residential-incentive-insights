@@ -4,7 +4,7 @@ An interactive web application providing data-driven guidance for residential en
 
 ## 🌐 Live Application
 
-**[View the Interactive Application](https://[your-username].github.io/residential-incentive-insights/)**
+**[View the Interactive Application](https://kamrawr.github.io/residential-incentive-insights/)**
 
 ## 📋 Overview
 
