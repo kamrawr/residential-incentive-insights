@@ -813,11 +813,13 @@ function renderCards(){
     const ct = (item.stakeholder_value?.contractor||[]).map(li=>`<li>${li}</li>`).join("") || "<li class='muted'>No items</li>";
 
     // Filter equity & market leverage based on audience
-    const showEquity = selectedAudiences.has("program_manager") || selectedAudiences.has("homeowner") || selectedAudiences.size === 3;
+    // Green tags: show for HOMEOWNER or PROGRAM MANAGER
+    const showEquity = selectedAudiences.has("homeowner") || selectedAudiences.has("program_manager");
     const eq = showEquity ? (equity_and_market_leverage||[]).map(x=>`<span class="tag green">${x}</span>`).join("") : "";
 
     // Filter implementation priorities based on audience
-    const showImpl = selectedAudiences.has("program_manager") || selectedAudiences.has("contractor") || selectedAudiences.size === 3;
+    // Blue tags: show for CONTRACTOR or PROGRAM MANAGER
+    const showImpl = selectedAudiences.has("contractor") || selectedAudiences.has("program_manager");
     const impl = showImpl ? (implementation_priorities||[]).map(x=>`<span class="tag blue">${x}</span>`).join("") : "";
 
     const card = document.createElement("section");
