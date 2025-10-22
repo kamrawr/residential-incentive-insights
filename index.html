@@ -699,7 +699,12 @@ function renderCards(){
     const {title, summary, impact_tags=[], cost_and_incentive_ratio={}, equity_and_market_leverage=[], implementation_priorities=[]} = item;
 
     const costPills = Object.entries(cost_and_incentive_ratio).map(([k,v])=>{
-      const label = k.replace(/_/g," ").replace(/\b\w/g,c=>c.toUpperCase());
+      // Create readable labels with proper capitalization
+      let label = k.replace(/_/g," ").replace(/\b\w/g,c=>c.toUpperCase());
+      // Fix acronyms
+      label = label.replace(/\bSwr\b/g, "SWR").replace(/\bCpf\b/g, "CPF")
+                   .replace(/\bHpwh\b/g, "HPWH").replace(/\bHear\b/g, "HEAR")
+                   .replace(/\bHomes\b/g, "HOMES").replace(/\bUsd\b/g, "USD");
       return `<span class="pill" title="${label} (Approximate - Verify Current Amounts)">${label}: ${typeof v==='object'?JSON.stringify(v):fmtMoney(v)}</span>`;
     }).join("");
     const costDisclaimer = `<p style="font-size:11px;color:var(--muted);margin:6px 0 0 0;"><em>⚠️ Approximate costs/incentives - verify current amounts with program administrators before purchasing</em></p>`;
