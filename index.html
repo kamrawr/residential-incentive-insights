@@ -104,8 +104,13 @@
   .tooltip .tooltiptext strong{display:block;margin-bottom:6px;color:var(--accent);font-size:13px}
   .tooltip:hover .tooltiptext{visibility:visible;opacity:1}
   .tooltip .tooltiptext::after{content:"";position:absolute;top:100%;left:50%;margin-left:-5px;border-width:5px;border-style:solid;border-color:var(--border) transparent transparent transparent}
-  .program-info{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;margin:12px 0}
-  .program-info h3{margin:0 0 8px 0;font-size:14px;color:var(--accent2)}
+  .program-info{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;margin:12px 0;transition:all .3s ease}
+  .program-info h3{margin:0 0 8px 0;font-size:14px;color:var(--accent2);cursor:pointer;user-select:none;display:flex;align-items:center;gap:8px}
+  .program-info h3:hover{color:var(--accent)}
+  .program-info .collapse-icon{font-size:14px;transition:transform .3s ease}
+  .program-info.collapsed .collapse-icon{transform:rotate(-90deg)}
+  .program-info .program-content{transition:all .3s ease;max-height:2000px;overflow:hidden}
+  .program-info.collapsed .program-content{max-height:0;opacity:0;margin:0;padding:0}
   .program-info p{margin:6px 0;font-size:13px;line-height:1.6}
   .program-info .income-box{background:var(--chip);border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:8px}
   .program-info .income-box strong{color:var(--good);display:block;margin-bottom:4px}
@@ -165,42 +170,48 @@
     <strong>This tool is provided "as-is" without warranties of any kind.</strong> The author assumes no liability for decisions made based on this information.
   </div>
 
-  <div class="program-info">
-    <h3>📋 Program Overview & Income Qualifications (Unofficial Summary - Verify Before Applying)</h3>
-    <p><strong>Standard Incentives:</strong> Typically available to all qualifying households regardless of income. Partial cost coverage (approximately 15-60% depending on measure). <em>Verify current eligibility and amounts.</em></p>
+  <div class="program-info collapsed" id="programInfo">
+    <h3 id="programInfoToggle">
+      <span class="collapse-icon">▼</span>
+      <span>Program Overview & Income Qualifications</span>
+    </h3>
+    <div class="program-content">
+      <p style="font-size:12px;color:var(--muted);margin-bottom:8px;"><em>Unofficial Summary - Verify Before Applying</em></p>
+      <p><strong>Standard Incentives:</strong> Typically available to all qualifying households regardless of income. Partial cost coverage (approximately 15-60% depending on measure). <em>Verify current eligibility and amounts.</em></p>
 
-    <p style="background:var(--chip);border:1px solid var(--border);border-radius:8px;padding:10px;margin:10px 0;">
-      💡 <strong>Check Your Eligibility:</strong> Use the <a href="https://kamrawr.github.io/oregon-income-calculator/" target="_blank" style="color:var(--accent);font-weight:600;">Oregon Income Eligibility Calculator</a> to determine which program tier you may qualify for based on your household income and county.
-    </p>
+      <p style="background:var(--chip);border:1px solid var(--border);border-radius:8px;padding:10px;margin:10px 0;">
+        💡 <strong>Check Your Eligibility:</strong> Use the <a href="https://kamrawr.github.io/oregon-income-calculator/" target="_blank" style="color:var(--accent);font-weight:600;">Oregon Income Eligibility Calculator</a> to determine which program tier you may qualify for based on your household income and county.
+      </p>
 
-    <div class="income-box">
+      <div class="income-box">
       <strong>Savings Within Reach (SWR) - Approximate Eligibility:</strong>
-      Energy Trust of Oregon program for moderate-income households, generally earning 60-80% of Area Median Income (AMI). For a family of 4 in Oregon, this may be approximately $55,000-$73,000 annually (varies significantly by county and household size). Provides increased cash incentives for energy upgrades and optional On-Bill Repayment financing through utility bills. <em><strong>Verify current income limits, incentive amounts, and financing options with Energy Trust of Oregon before applying.</strong></em>
+      Energy Trust of Oregon program for moderate-income households, generally earning 60-80% of Area Median Income (AMI). For a family of 4 in Oregon, this may be approximately $55,000-$73,000 annually (varies significantly by county and household size). Provides increased cash incentives for energy upgrades and optional On-Bill Repayment financing through utility bills.
     </div>
 
     <div class="income-box">
       <strong>Community Partner Funding (CPF) - Approximate Eligibility:</strong>
-      Energy Trust of Oregon program providing enhanced incentives through community-based organizations serving communities of color, rural areas, and low-income households (typically ≤60% AMI). For a family of 4 in Oregon, this may be approximately $55,000 or less annually (varies by county and household size). Community partners help residents access energy-saving upgrades like weatherization and efficient heating/cooling systems. <em><strong>Verify current income limits and available community partners with Energy Trust of Oregon before applying.</strong></em>
+      Energy Trust of Oregon program providing enhanced incentives through community-based organizations serving communities of color, rural areas, and low-income households. CPF does not have strict income limits but may prioritize lower-income households based on available resources and organizational mission. Community partners help residents access energy-saving upgrades like weatherization and efficient heating/cooling systems.
     </div>
 
     <div class="income-box">
       <strong>Climate Equity and Resilience Through Action (CERTA):</strong>
-      Oregon program funded by a $197 million EPA grant to reduce greenhouse gas emissions. Works with state agencies to implement projects in buildings, transportation, and waste management. Provides energy efficiency improvements, electric vehicle incentives, and support for low-income communities. May include funding for barriers like outdated electrical, structural repairs, or moisture issues that prevent energy upgrades. <em><strong>Verify current program availability, eligible projects, and application process with Oregon state agencies.</strong></em>
+      Oregon program funded by a $197 million EPA grant to reduce greenhouse gas emissions. Works with state agencies to implement projects in buildings, transportation, and waste management. Provides energy efficiency improvements, electric vehicle incentives, and support for low-income communities. May include funding for barriers like outdated electrical, structural repairs, or moisture issues that prevent energy upgrades.
     </div>
 
     <div class="income-box">
       <strong>HOMES (Home Efficiency Rebates - Federal IRA Program - Approximate Information):</strong>
-      Part of the Inflation Reduction Act (IRA) providing rebates for energy-efficient retrofits including insulation, air sealing, and energy-efficient windows. Available to both homeowners and renters; higher rebates for low-income households. Rebates may range from $2,000-$8,000 based on energy savings achieved. May require home energy audit. <em><strong>Verify current federal program status, Oregon state implementation, eligibility, and requirements before planning projects.</strong></em>
+      Part of the Inflation Reduction Act (IRA) providing rebates for energy-efficient retrofits including insulation, air sealing, and energy-efficient windows. Available to both homeowners and renters; higher rebates for low-income households. Rebates may range from $2,000-$8,000 based on energy savings achieved. May require home energy audit.
     </div>
 
     <div class="income-box">
       <strong>HEAR (Home Electrification and Appliance Rebates - Federal IRA - Approximate Information):</strong>
-      Part of the Inflation Reduction Act (IRA) providing point-of-sale rebates for high-efficiency electric appliances, primarily for low-to-moderate-income households (typically ≤150% area median income). May cover heat pumps, heat pump water heaters, and related upgrades like insulation and electrical panel improvements. Rebates can cover a significant portion of project costs. <em><strong>Verify current federal program status, Oregon state implementation, and exact rebate amounts before purchasing.</strong></em>
+      Part of the Inflation Reduction Act (IRA) providing point-of-sale rebates for high-efficiency electric appliances, primarily for low-to-moderate-income households (typically ≤150% area median income). May cover heat pumps, heat pump water heaters, and related upgrades like insulation and electrical panel improvements. Rebates can cover a significant portion of project costs.
     </div>
 
-    <p style="margin-top:10px;font-size:12px;color:var(--muted);">
-      <em><strong>⚠️ All figures above are approximate and subject to change.</strong> Income limits vary significantly by county, household size, and program year. Federal HOMES/HEAR programs may not yet be fully implemented in all states. <strong>Always contact official program administrators</strong> or visit <a href="https://www.energytrust.org" target="_blank">energytrust.org</a> (for Energy Trust programs) or your state energy office (for federal programs) to verify current eligibility, amounts, and timelines before making any financial commitments.</em>
-    </p>
+      <p style="margin-top:10px;font-size:12px;color:var(--muted);">
+        <em><strong>⚠️ All figures above are approximate and subject to change.</strong> Income limits vary significantly by county, household size, and program year. Federal HOMES/HEAR programs may not yet be fully implemented in all states. <strong>Always contact official program administrators</strong> or visit <a href="https://www.energytrust.org" target="_blank">energytrust.org</a> (for Energy Trust programs) or your state energy office (for federal programs) to verify current eligibility, amounts, and timelines before making any financial commitments.</em>
+      </p>
+    </div>
   </div>
 
   <div id="contextBox" class="context-box" role="complementary" aria-label="Project context information"></div>
@@ -951,6 +962,19 @@ headerTitleEl.addEventListener("keydown", (e)=>{
     toggleHeader();
   }
 });
+
+// Program info toggle
+const programInfoEl = document.getElementById("programInfo");
+const programInfoToggle = document.getElementById("programInfoToggle");
+if(programInfoToggle){
+  programInfoToggle.onclick = ()=> programInfoEl.classList.toggle("collapsed");
+  programInfoToggle.addEventListener("keydown", (e)=>{
+    if(e.key === "Enter" || e.key === " "){
+      e.preventDefault();
+      programInfoEl.classList.toggle("collapsed");
+    }
+  });
+}
 
 // Skip link functionality
 document.querySelector(".skip-link").addEventListener("focus", function(){
