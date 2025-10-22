@@ -532,7 +532,7 @@ const byKey = (obj, key) => obj[key];
 const fmtMoney = v => (typeof v === "number" ? `$${v.toLocaleString()}` : v);
 const html = (strings, ...vals) => strings.map((s,i)=>s+(vals[i]??"")).join("");
 
-const PROJECT_OPTIONS = Object.entries(DATA).map(([k,v])=>({value:k,label:v.title}));
+const PROJECT_OPTIONS = Object.entries(DATA).map(([k,v])=>({value:k,label:v.title})).reverse();
 const AUDIENCE_OPTIONS = [
   {value:"program_manager",label:"Program Manager"},
   {value:"homeowner",label:"Homeowner"},
