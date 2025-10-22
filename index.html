@@ -204,6 +204,7 @@
   </div>
 
   <div id="contextBox" class="context-box" role="complementary" aria-label="Project context information"></div>
+  <div id="recommendations" class="context-box" role="complementary" aria-label="Recommendations" style="display:none;border-left:3px solid var(--accent2);"></div>
   <div id="cards" class="grid" role="region" aria-label="Project details"></div>
   <footer class="footer" role="contentinfo">
     <strong>⚠️ REMINDER:</strong> This unofficial tool provides approximate guidance only. All costs, incentive amounts, and program details are subject to change. <strong>Never make significant financial purchases or commitments based solely on this information.</strong> Always verify current specifications, eligibility requirements, and incentive amounts with official program administrators and obtain professional quotes before proceeding. Data compiled from publicly available sources; accuracy not guaranteed.
@@ -599,6 +600,74 @@ function updateFilterSummary(){
   filterSummaryEl.textContent = parts.join(" · ");
 }
 
+/** ---------- RECOMMENDATIONS ROLLUP ---------- **/
+function renderRecommendations(){
+  const recommendationsEl = document.getElementById("recommendations");
+  if(!recommendationsEl) return;
+
+  if(selectedProjects.size === 0){
+    recommendationsEl.style.display = "none";
+    return;
+  }
+
+  // Gather data from selected projects
+  const selectedData = Array.from(selectedProjects).map(key=>DATA[key]);
+
+  // Count high-impact projects
+  const highImpact = selectedData.filter(d=>d.impact_tags?.some(t=>t.includes("High") || t.includes("Very high"))).length;
+
+  // Check for stackable funding opportunities
+  const hasStacking = selectedData.some(d=>
+    d.equity_and_market_leverage?.some(e=>e.toLowerCase().includes("stack")) ||
+    d.stakeholder_value?.homeowner?.some(h=>h.toLowerCase().includes("stack"))
+  );
+
+  // Get funding sources mentioned
+  const fundingSources = new Set();
+  selectedData.forEach(d=>{
+    const text = JSON.stringify(d).toLowerCase();
+    if(text.includes("swr") || text.includes("savings within reach")) fundingSources.add("SWR");
+    if(text.includes("cpf") || text.includes("community partner")) fundingSources.add("CPF");
+    if(text.includes("certa")) fundingSources.add("CERTA");
+    if(text.includes("hear")) fundingSources.add("HEAR");
+    if(text.includes("homes")) fundingSources.add("HOMES");
+  });
+
+  // Build recommendations
+  const recs = [];
+
+  if(highImpact > 0){
+    recs.push(`${highImpact} high-impact project${highImpact>1?'s':''} selected with significant energy savings potential`);
+  }
+
+  if(hasStacking && fundingSources.size > 1){
+    recs.push(`Multiple funding sources available: ${Array.from(fundingSources).join(", ")} - consider stacking for maximum savings`);
+  }
+
+  if(selectedProjects.has("insulation_and_envelope") && selectedProjects.has("heat_pumps")){
+    recs.push(`Excellent pairing: Insulation + heat pumps delivers optimal performance and energy savings`);
+  }
+
+  if(fundingSources.has("HEAR") || fundingSources.has("HOMES")){
+    recs.push(`Federal IRA rebates may be available - verify Oregon implementation status with state energy office`);
+  }
+
+  if(selectedAudiences.has("homeowner") && !selectedAudiences.has("contractor")){
+    recs.push(`Consider consulting certified contractors for accurate quotes and installation guidance`);
+  }
+
+  if(recs.length === 0){
+    recommendationsEl.style.display = "none";
+    return;
+  }
+
+  recommendationsEl.innerHTML = `
+    <h2>💡 Key Recommendations</h2>
+    <ul>${recs.map(r=>`<li>${r}</li>`).join("")}</ul>
+  `;
+  recommendationsEl.style.display = "block";
+}
+
 /** ---------- CONTEXT BOX ---------- **/
 function renderContext(){
   if(selectedProjects.size === 0){
@@ -743,8 +812,13 @@ function renderCards(){
     const ho = (item.stakeholder_value?.homeowner||[]).map(li=>`<li>${li}</li>`).join("") || "<li class='muted'>No items</li>";
     const ct = (item.stakeholder_value?.contractor||[]).map(li=>`<li>${li}</li>`).join("") || "<li class='muted'>No items</li>";
 
-    const eq = (equity_and_market_leverage||[]).map(x=>`<span class="tag green">${x}</span>`).join("");
-    const impl = (implementation_priorities||[]).map(x=>`<span class="tag blue">${x}</span>`).join("");
+    // Filter equity & market leverage based on audience
+    const showEquity = selectedAudiences.has("program_manager") || selectedAudiences.has("homeowner") || selectedAudiences.size === 3;
+    const eq = showEquity ? (equity_and_market_leverage||[]).map(x=>`<span class="tag green">${x}</span>`).join("") : "";
+
+    // Filter implementation priorities based on audience
+    const showImpl = selectedAudiences.has("program_manager") || selectedAudiences.has("contractor") || selectedAudiences.size === 3;
+    const impl = showImpl ? (implementation_priorities||[]).map(x=>`<span class="tag blue">${x}</span>`).join("") : "";
 
     const card = document.createElement("section");
     card.className = "card";
@@ -755,12 +829,12 @@ function renderCards(){
       <div class="muted">${summary}</div>
       <div class="row" style="margin-top:8px">${tags}</div>
 
-      <div class="kv">${costPills}</div>
+      ${costPills ? `<div class="kv">${costPills}</div>` : ''}
       ${costDisclaimer}
 
-      <div class="row">${eq}</div>
-      <div style="height:6px"></div>
-      <div class="row">${impl}</div>
+      ${eq ? `<div class="row">${eq}</div>` : ''}
+      ${eq && impl ? `<div style="height:6px"></div>` : ''}
+      ${impl ? `<div class="row">${impl}</div>` : ''}
 
       <div class="sep"></div>
 
@@ -804,6 +878,7 @@ function renderCards(){
 
 function renderAll(){
   renderContext();
+  renderRecommendations();
   renderCards();
   updateFilterSummary();
 }
