@@ -698,7 +698,30 @@ function renderCards(){
   items.forEach(item=>{
     const {title, summary, impact_tags=[], cost_and_incentive_ratio={}, equity_and_market_leverage=[], implementation_priorities=[]} = item;
 
-    const costPills = Object.entries(cost_and_incentive_ratio).map(([k,v])=>{
+    // Filter cost/incentive data based on audience
+    const getRelevantCostData = (data) => {
+      const entries = Object.entries(data);
+
+      // If all audiences selected or none, show everything
+      if(selectedAudiences.size === 3 || selectedAudiences.size === 0) return entries;
+
+      // Define what each audience cares about
+      const audienceRelevance = {
+        homeowner: ['average_cost', 'cost', 'incentive', 'rebate', 'coverage', 'swr', 'cpf', 'hear', 'homes'],
+        contractor: ['average_cost', 'cost', 'incentive', 'rebate', 'coverage', 'swr', 'cpf', 'hear', 'homes', 'requirement'],
+        program_manager: ['average_cost', 'cost', 'incentive', 'rebate', 'coverage', 'swr', 'cpf', 'certa', 'hear', 'homes', 'fund']
+      };
+
+      // Filter based on selected audiences
+      return entries.filter(([key]) => {
+        const lowerKey = key.toLowerCase();
+        return Array.from(selectedAudiences).some(aud =>
+          audienceRelevance[aud].some(term => lowerKey.includes(term))
+        );
+      });
+    };
+
+    const costPills = getRelevantCostData(cost_and_incentive_ratio).map(([k,v])=>{
       // Create readable labels with proper capitalization
       let label = k.replace(/_/g," ").replace(/\b\w/g,c=>c.toUpperCase());
       // Fix acronyms
@@ -707,7 +730,7 @@ function renderCards(){
                    .replace(/\bHomes\b/g, "HOMES").replace(/\bUsd\b/g, "USD");
       return `<span class="pill" title="${label} (Approximate - Verify Current Amounts)">${label}: ${typeof v==='object'?JSON.stringify(v):fmtMoney(v)}</span>`;
     }).join("");
-    const costDisclaimer = `<p style="font-size:11px;color:var(--muted);margin:6px 0 0 0;"><em>⚠️ Approximate costs/incentives - verify current amounts with program administrators before purchasing</em></p>`;
+    const costDisclaimer = costPills ? `<p style="font-size:11px;color:var(--muted);margin:6px 0 0 0;"><em>⚠️ Approximate costs/incentives - verify current amounts with program administrators before purchasing</em></p>` : '';
 
     const tags = impact_tags.map(t=>`<span class="chip"><span class="dot ${badgeDots(t)}"></span>${t}</span>`).join("");
 
