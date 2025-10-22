@@ -11,17 +11,41 @@
     --danger:#f87171; --good:#34d399; --warn:#fbbf24; --chip:#1b2531;
     --card:#0f141b; --border:#1e2a38; --focus:#60a5fa;
   }
+  [data-theme="light"]{
+    --bg:#f8fafc; --panel:#ffffff; --muted:#64748b;
+    --text:#0f172a; --accent:#0284c7; --accent2:#65a30d;
+    --danger:#dc2626; --good:#16a34a; --warn:#ca8a04; --chip:#e2e8f0;
+    --card:#ffffff; --border:#cbd5e1; --focus:#0ea5e9;
+  }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,"Helvetica Neue",Arial}
-  header{position:sticky;top:0;z-index:30;background:linear-gradient(180deg,rgba(11,14,18,.95),rgba(11,14,18,.7));backdrop-filter:blur(6px);border-bottom:1px solid var(--border)}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,"Helvetica Neue",Arial;transition:background-color .3s ease,color .3s ease}
+  header{position:sticky;top:0;z-index:30;background:var(--panel);backdrop-filter:blur(6px);border-bottom:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.1)}
   .wrap{max-width:1100px;margin:0 auto;padding:16px}
+  .header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:16px;flex-wrap:wrap}
+  .header-left{flex:1;min-width:280px}
   h1{font-size:20px;margin:0 0 6px 0}
-  .sub{color:var(--muted);font-size:13px}
-  .toolbar{display:grid;grid-template-columns:1fr 200px 220px;gap:8px;margin-top:12px}
-  input[type="search"], select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--panel);color:var(--text);outline:none}
-  input[type="search"]:focus, select:focus{border-color:var(--focus);box-shadow:0 0 0 3px rgba(96,165,250,.2)}
+  .sub{color:var(--muted);font-size:13px;line-height:1.5}
+  .theme-toggle{cursor:pointer;background:var(--chip);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:10px;display:flex;align-items:center;gap:6px;font-size:13px;transition:all .2s;white-space:nowrap}
+  .theme-toggle:hover{border-color:var(--focus);transform:scale(1.05)}
+  .toolbar{display:grid;grid-template-columns:1fr;gap:14px;margin-top:12px}
+  .filter-group{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .filter-group label{color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;min-width:120px}
+  input[type="search"]{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--panel);color:var(--text);outline:none}
+  input[type="search"]:focus{border-color:var(--focus);box-shadow:0 0 0 3px rgba(96,165,250,.2)}
+  .multi-select{display:flex;flex-wrap:wrap;gap:8px;flex:1}
+  .checkbox-item{display:flex;align-items:center;gap:6px;cursor:pointer;user-select:none;padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--panel);transition:all .2s}
+  .checkbox-item:hover{border-color:var(--focus);background:var(--chip)}
+  .checkbox-item input[type="checkbox"]{cursor:pointer;width:16px;height:16px;accent-color:var(--accent)}
+  .checkbox-item label{cursor:pointer;font-size:13px;color:var(--text);margin:0}
+  .context-box{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;margin:16px 0;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+  .context-box h2{margin:0 0 10px 0;font-size:17px;color:var(--accent);font-weight:600}
+  .context-box p{margin:6px 0;line-height:1.7;color:var(--text)}
+  .context-box ul{margin:10px 0;padding-left:24px;list-style:none}
+  .context-box li{margin:6px 0;line-height:1.5;padding-left:20px;position:relative}
+  .context-box li:before{content:"✓";position:absolute;left:0;color:var(--good);font-weight:bold}
   .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;margin:16px auto}
-  .card{grid-column:span 12;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px}
+  .card{grid-column:span 12;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;box-shadow:0 1px 3px rgba(0,0,0,.1);transition:box-shadow .2s}
+  .card:hover{box-shadow:0 4px 12px rgba(0,0,0,.15)}
   @media (min-width:860px){.card{grid-column:span 6}}
   .card h3{margin:0 0 8px 0;font-size:16px}
   .chip{display:inline-flex;align-items:center;gap:6px;background:var(--chip);color:var(--muted);padding:6px 10px;border-radius:999px;font-size:12px;border:1px solid var(--border);margin-right:6px}
@@ -35,14 +59,17 @@
   .aud ul{margin:0;padding-left:18px} .aud li{margin:4px 0}
   .muted{color:var(--muted)}
   .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  button{cursor:pointer;background:var(--chip);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:10px}
-  button:hover{border-color:var(--focus)}
+  button{cursor:pointer;background:var(--chip);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:10px;transition:all .2s}
+  button:hover{border-color:var(--focus);background:var(--panel)}
   .footer{color:var(--muted);font-size:12px;margin:22px 0}
   .hide{display:none}
-  .tag{font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid var(--border);background:#0d131a;color:#a7bdcf}
-  .tag.green{color:#a7f3d0;border-color:#065f46;background:#052e2a}
-  .tag.blue{color:#bae6fd;border-color:#075985;background:#06263a}
-  .tag.yellow{color:#fde68a;border-color:#854d0e;background:#2b1e07}
+  .tag{font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid var(--border);background:var(--chip);color:var(--text)}
+  .tag.green{background:#dcfce7;border-color:#16a34a;color:#166534}
+  .tag.blue{background:#dbeafe;border-color:#0284c7;color:#075985}
+  .tag.yellow{background:#fef9c3;border-color:#ca8a04;color:#854d0e}
+  [data-theme="dark"] .tag.green{background:#052e2a;border-color:#065f46;color:#a7f3d0}
+  [data-theme="dark"] .tag.blue{background:#06263a;border-color:#075985;color:#bae6fd}
+  [data-theme="dark"] .tag.yellow{background:#2b1e07;border-color:#854d0e;color:#fde68a}
   .badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#9fb6c8;background:#0d1520;border:1px solid var(--border);padding:4px 8px;border-radius:999px}
   .sep{height:1px;background:var(--border);margin:10px 0}
   a{color:var(--accent)}
@@ -51,22 +78,30 @@
 <body>
 <header>
   <div class="wrap">
-    <h1>Residential Incentive Insights</h1>
-    <div class="sub">Choose a <b>Project Type</b> and <b>Audience</b>. Get concise, data-driven guidance for action.</div>
+    <div class="header-top">
+      <div class="header-left">
+        <h1>Residential Incentive Insights</h1>
+        <div class="sub">Select project types and audiences to view tailored, data-driven guidance.</div>
+      </div>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+        <span id="themeIcon">☀️</span>
+        <span id="themeLabel">Light</span>
+      </button>
+    </div>
     <div class="toolbar">
       <input id="q" type="search" placeholder="Quick search (e.g., ductless, windows, CPF, SWR, audit)"/>
-      <select id="project">
-        <option value="all">All Project Types</option>
-      </select>
-      <select id="aud">
-        <option value="all">Audience: Program + Homeowner + Contractor</option>
-        <option value="program_manager">Program Manager</option>
-        <option value="homeowner">Homeowner</option>
-        <option value="contractor">Contractor</option>
-      </select>
+      
+      <div class="filter-group">
+        <label>Project Types:</label>
+        <div class="multi-select" id="projectFilters"></div>
+      </div>
+      
+      <div class="filter-group">
+        <label>Audiences:</label>
+        <div class="multi-select" id="audienceFilters"></div>
+      </div>
     </div>
     <div class="row">
-      <span class="badge">Tip: Use URL hashes like <code>#heat_pumps?aud=homeowner</code> to deep-link.</span>
       <button id="btnCopy">Copy Visible Insights</button>
       <button id="btnExport">Export Visible JSON</button>
       <span id="msg" class="badge hide"></span>
@@ -75,6 +110,7 @@
 </header>
 
 <main class="wrap">
+  <div id="contextBox" class="context-box"></div>
   <div id="cards" class="grid"></div>
   <div class="footer">
     Built for quick, offline field use. Costs are typical ranges; always verify current specs and PI sheets before quoting.
@@ -82,6 +118,59 @@
 </main>
 
 <script>
+/** ---------- OVERVIEW CONTEXT ---------- **/
+const OVERVIEW_CONTEXT = {
+  default: {
+    title: "Welcome to Residential Incentive Insights",
+    content: `This interactive tool helps program managers, homeowners, and contractors navigate residential energy efficiency incentives. 
+      Use the filters below to explore project types and view tailored guidance based on your role. Each project includes cost analysis, 
+      implementation priorities, and stakeholder-specific action items.`
+  },
+  heat_pumps: {
+    title: "Heat Pumps: The Electrification Leader",
+    content: `Heat pumps are the cornerstone of residential electrification. They deliver 30–50% energy savings and work best when paired 
+      with weatherization upgrades. CPF and SWR tiers make them accessible across income levels, while market-rate options respond to 
+      financing and insulation bundles.`,
+    keyPoints: ["Highest energy impact", "Multiple funding tiers available", "Best when bundled with insulation"]
+  },
+  insulation_and_envelope: {
+    title: "Insulation & Envelope: The Foundation",
+    content: `Dollar-for-dollar, insulation delivers the highest energy savings and is essential for heat pump performance. CPF and CERTA 
+      funding remove barriers for income-qualified households. Target poorly insulated homes for maximum impact.`,
+    keyPoints: ["Best ROI per dollar", "Prerequisite for HVAC efficiency", "CERTA unlocks stuck projects"]
+  },
+  controls_and_thermostats: {
+    title: "Smart Controls: Small Investment, Big Returns",
+    content: `Smart thermostats cost under $250 but deliver 8–15% energy savings. They're perfect bundled with heat pumps to prevent 
+      inefficient auxiliary heat. Direct-install via CPF removes upfront barriers.`,
+    keyPoints: ["Low cost, high payback", "Behavior change enabler", "Enhances HVAC performance"]
+  },
+  windows: {
+    title: "Windows: Comfort Over Savings",
+    content: `Window replacements offer significant comfort improvements but limited financial payback. Prioritize for health drivers 
+      (condensation, noise) or in CPF projects where co-funding covers costs. Always bundle with air-sealing.`,
+    keyPoints: ["High comfort impact", "Long payback period", "Best for equity-driven projects"]
+  },
+  gas_heating_systems: {
+    title: "Gas Systems: Safety & Transition",
+    content: `Gas furnaces remain relevant for safety upgrades and homes not ready for electrification. Focus on AFUE ≥95% and proper 
+      venting. Fireplace incentives have questionable value and may warrant reprioritization.`,
+    keyPoints: ["Mature technology", "Safety compliance focus", "Consider electrification alternatives"]
+  },
+  water_heating_systems: {
+    title: "Water Heating: The Electrification Partner",
+    content: `Heat pump water heaters align with decarbonization goals and save on operating costs. CPF can cover full costs for priority 
+      households. Always verify electrical capacity and space requirements before installation.`,
+    keyPoints: ["Supports electrification", "Moderate energy savings", "Best bundled with other upgrades"]
+  },
+  home_energy_assessment_and_certa: {
+    title: "Assessments: Your Project Gateway",
+    content: `Home energy assessments identify opportunities and prioritize multi-measure pathways. CERTA funding (up to $2,000) removes 
+      repair barriers like outdated wiring or structural issues that block weatherization work.`,
+    keyPoints: ["Identifies best opportunities", "Prioritizes multi-measure work", "CERTA enables stuck projects"]
+  }
+};
+
 /** ---------- DATA (from your refined, practical JSON) ---------- **/
 const DATA = {
   heat_pumps: {
@@ -328,24 +417,105 @@ const fmtMoney = v => (typeof v === "number" ? `$${v.toLocaleString()}` : v);
 const html = (strings, ...vals) => strings.map((s,i)=>s+(vals[i]??"")).join("");
 
 const PROJECT_OPTIONS = Object.entries(DATA).map(([k,v])=>({value:k,label:v.title}));
+const AUDIENCE_OPTIONS = [
+  {value:"program_manager",label:"Program Manager"},
+  {value:"homeowner",label:"Homeowner"},
+  {value:"contractor",label:"Contractor"}
+];
 
-/** ---------- RENDER ---------- **/
+/** ---------- STATE ---------- **/
+let selectedProjects = new Set();
+let selectedAudiences = new Set(["program_manager","homeowner","contractor"]);
+let currentTheme = localStorage.getItem("theme") || "dark";
+
+/** ---------- ELEMENTS ---------- **/
 const cardsEl = document.getElementById("cards");
 const qEl = document.getElementById("q");
-const projectEl = document.getElementById("project");
-const audEl = document.getElementById("aud");
 const msgEl = document.getElementById("msg");
+const contextBoxEl = document.getElementById("contextBox");
+const themeToggleBtn = document.getElementById("themeToggle");
+const themeIconEl = document.getElementById("themeIcon");
+const themeLabelEl = document.getElementById("themeLabel");
 
-function initSelectors(){
+/** ---------- THEME ---------- **/
+function applyTheme(theme){
+  document.documentElement.setAttribute("data-theme", theme);
+  currentTheme = theme;
+  localStorage.setItem("theme", theme);
+  if(theme==="light"){
+    themeIconEl.textContent = "🌙";
+    themeLabelEl.textContent = "Dark";
+  } else {
+    themeIconEl.textContent = "☀️";
+    themeLabelEl.textContent = "Light";
+  }
+}
+
+function toggleTheme(){
+  applyTheme(currentTheme==="dark" ? "light" : "dark");
+}
+
+/** ---------- CONTEXT BOX ---------- **/
+function renderContext(){
+  if(selectedProjects.size === 0){
+    const ctx = OVERVIEW_CONTEXT.default;
+    contextBoxEl.innerHTML = `
+      <h2>${ctx.title}</h2>
+      <p>${ctx.content}</p>
+    `;
+    contextBoxEl.style.display = "block";
+  } else if(selectedProjects.size === 1){
+    const key = Array.from(selectedProjects)[0];
+    const ctx = OVERVIEW_CONTEXT[key] || OVERVIEW_CONTEXT.default;
+    const points = ctx.keyPoints ? `<ul>${ctx.keyPoints.map(p=>`<li>${p}</li>`).join("")}</ul>` : "";
+    contextBoxEl.innerHTML = `
+      <h2>${ctx.title}</h2>
+      <p>${ctx.content}</p>
+      ${points}
+    `;
+    contextBoxEl.style.display = "block";
+  } else {
+    contextBoxEl.style.display = "none";
+  }
+}
+
+/** ---------- INIT FILTERS ---------- **/
+function initFilters(){
+  const projectFiltersEl = document.getElementById("projectFilters");
+  const audienceFiltersEl = document.getElementById("audienceFilters");
+  
+  // Project checkboxes
   PROJECT_OPTIONS.forEach(opt=>{
-    const o=document.createElement("option");
-    o.value=opt.value; o.textContent=opt.label;
-    projectEl.appendChild(o);
+    const div = document.createElement("div");
+    div.className = "checkbox-item";
+    const id = `proj_${opt.value}`;
+    div.innerHTML = `<input type="checkbox" id="${id}" value="${opt.value}"/><label for="${id}">${opt.label}</label>`;
+    projectFiltersEl.appendChild(div);
+    const cb = div.querySelector("input");
+    cb.addEventListener("change", ()=>{
+      if(cb.checked) selectedProjects.add(opt.value);
+      else selectedProjects.delete(opt.value);
+      renderAll();
+    });
+  });
+  
+  // Audience checkboxes
+  AUDIENCE_OPTIONS.forEach(opt=>{
+    const div = document.createElement("div");
+    div.className = "checkbox-item";
+    const id = `aud_${opt.value}`;
+    div.innerHTML = `<input type="checkbox" id="${id}" value="${opt.value}" checked/><label for="${id}">${opt.label}</label>`;
+    audienceFiltersEl.appendChild(div);
+    const cb = div.querySelector("input");
+    cb.addEventListener("change", ()=>{
+      if(cb.checked) selectedAudiences.add(opt.value);
+      else selectedAudiences.delete(opt.value);
+      renderAll();
+    });
   });
 }
 
 function badgeDots(key){
-  // heuristic badges
   const map = {
     "High impact":"good","Very high impact":"good","High ROI":"good",
     "Comfort":"warn","Low energy ROI":"warn","Combustion":"danger"
@@ -355,15 +525,13 @@ function badgeDots(key){
 
 function renderCards(){
   const query = qEl.value.trim().toLowerCase();
-  const selProject = projectEl.value;
-  const selAud = audEl.value;
 
   // build list
   let items = Object.entries(DATA).map(([k,v])=>({key:k, ...v}));
 
-  // filter project
-  if(selProject!=="all"){
-    items = items.filter(i=>i.key===selProject);
+  // filter by selected projects
+  if(selectedProjects.size > 0){
+    items = items.filter(i=>selectedProjects.has(i.key));
   }
 
   // search query across title, summary, tags and audience text
@@ -394,9 +562,9 @@ function renderCards(){
     const tags = impact_tags.map(t=>`<span class="chip"><span class="dot ${badgeDots(t)}"></span>${t}</span>`).join("");
 
     // audience blocks
-    const showPM = (selAud==="all" || selAud==="program_manager");
-    const showHO = (selAud==="all" || selAud==="homeowner");
-    const showCT = (selAud==="all" || selAud==="contractor");
+    const showPM = selectedAudiences.has("program_manager");
+    const showHO = selectedAudiences.has("homeowner");
+    const showCT = selectedAudiences.has("contractor");
 
     const pm = (item.stakeholder_value?.program_manager||[]).map(li=>`<li>${li}</li>`).join("") || "<li class='muted'>No items</li>";
     const ho = (item.stakeholder_value?.homeowner||[]).map(li=>`<li>${li}</li>`).join("") || "<li class='muted'>No items</li>";
@@ -431,7 +599,6 @@ function renderCards(){
       <div class="row" style="margin-top:10px">
         <button class="btnCopyCard">Copy Card</button>
         <button class="btnJson">View JSON</button>
-        <button class="btnLink">Copy Deep Link</button>
       </div>
     `;
 
@@ -449,12 +616,6 @@ function renderCards(){
       a.href = url; a.download = `${item.key}.json`; a.click();
       setTimeout(()=>URL.revokeObjectURL(url), 1500);
     };
-    card.querySelector(".btnLink").onclick = ()=>{
-      const u = new URL(location.href);
-      u.hash = `${item.key}?aud=${audEl.value}`;
-      navigator.clipboard.writeText(u.toString());
-      flash("Deep link copied");
-    };
 
     cardsEl.appendChild(card);
   });
@@ -462,9 +623,14 @@ function renderCards(){
   if(items.length===0){
     const empty = document.createElement("div");
     empty.className="card";
-    empty.innerHTML = `<div class="muted">No results. Try clearing filters or using broader keywords.</div>`;
+    empty.innerHTML = `<div class="muted">No results. Try selecting different filters or using broader keywords.</div>`;
     cardsEl.appendChild(empty);
   }
+}
+
+function renderAll(){
+  renderContext();
+  renderCards();
 }
 
 function flash(text){
@@ -474,11 +640,13 @@ function flash(text){
 }
 
 function exportVisibleJSON(){
-  const selProject = projectEl.value;
-  const selAud = audEl.value;
   const q = qEl.value.trim().toLowerCase();
   let items = Object.entries(DATA).map(([k,v])=>({k,v}));
-  if(selProject!=="all") items = items.filter(i=>i.k===selProject);
+  
+  if(selectedProjects.size > 0){
+    items = items.filter(({k})=>selectedProjects.has(k));
+  }
+  
   if(q){
     items = items.filter(({v})=>{
       const hay = [
@@ -492,61 +660,43 @@ function exportVisibleJSON(){
       return hay.includes(q);
     });
   }
-  // If audience filter is set, trim the stakeholder_value block
+  
+  // Filter by selected audiences
   const pruned = {};
   items.forEach(({k,v})=>{
     const copy = JSON.parse(JSON.stringify(v));
-    if(selAud!=="all"){
-      copy.stakeholder_value = { [selAud]: v.stakeholder_value?.[selAud] || [] };
+    if(selectedAudiences.size < 3){
+      const filteredValue = {};
+      selectedAudiences.forEach(aud => {
+        filteredValue[aud] = v.stakeholder_value?.[aud] || [];
+      });
+      copy.stakeholder_value = filteredValue;
     }
     pruned[k]=copy;
   });
+  
   const blob = new Blob([JSON.stringify(pruned,null,2)], {type:"application/json"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href=url; a.download="visible_insights.json"; a.click();
   setTimeout(()=>URL.revokeObjectURL(url),1500);
+  flash("Exported JSON");
 }
 
-// deep link support: #heat_pumps?aud=homeowner
-function applyDeepLink(){
-  if(!location.hash) return;
-  const [hash, query] = location.hash.slice(1).split("?");
-  if(hash && DATA[hash]) projectEl.value = hash;
-  if(query){
-    const params = new URLSearchParams(query);
-    const aud = params.get("aud");
-    if(aud && ["all","program_manager","homeowner","contractor"].includes(aud)) audEl.value = aud;
-    const qStr = params.get("q"); if(qStr) qEl.value = qStr;
-  }
-}
-
+// Button listeners
 document.getElementById("btnCopy").onclick = ()=>{
   const t = Array.from(document.querySelectorAll(".card")).map(c=>c.innerText).join("\n\n---\n\n");
   navigator.clipboard.writeText(t); flash("Copied visible insights");
 };
 document.getElementById("btnExport").onclick = exportVisibleJSON;
+themeToggleBtn.onclick = toggleTheme;
 
 qEl.addEventListener("input", renderCards);
-projectEl.addEventListener("change", ()=>{
-  // update hash
-  const u = new URL(location.href);
-  u.hash = projectEl.value==="all" ? "" : `${projectEl.value}?aud=${audEl.value}`;
-  history.replaceState(null,"",u);
-  renderCards();
-});
-audEl.addEventListener("change", ()=>{
-  const u = new URL(location.href);
-  const key = projectEl.value==="all" ? "" : projectEl.value;
-  u.hash = key ? `${key}?aud=${audEl.value}` : `#?aud=${audEl.value}`;
-  history.replaceState(null,"",u);
-  renderCards();
-});
 
 // init
-initSelectors();
-applyDeepLink();
-renderCards();
+applyTheme(currentTheme);
+initFilters();
+renderAll();
 </script>
 </body>
 </html>
