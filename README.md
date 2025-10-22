@@ -1,6 +1,6 @@
 # Residential Incentive Insights
 
-An interactive web application providing comprehensive guidance for residential energy efficiency incentive programs. Built for program managers, homeowners, and contractors to quickly access actionable insights for energy upgrade projects, combining **Energy Trust of Oregon** programs (Standard, SWR, CPF, CERTA) with **federal HOMES and HEAR rebates**.
+An interactive web application providing comprehensive guidance for residential energy efficiency incentive programs. Built for program managers, homeowners, and contractors to quickly access actionable insights for energy upgrade projects, combining **Energy Trust of Oregon** programs (Standard, Savings Within Reach, Community Partner Funding), **Oregon CERTA** program, and **federal IRA rebate programs** (HOMES and HEAR).
 
 ## ⚠️ IMPORTANT DISCLAIMER - READ BEFORE USE
 
@@ -31,13 +31,15 @@ This application provides comprehensive information about residential energy eff
 
 ### Energy Trust of Oregon Programs
 - **Standard Incentives**: Available to all qualifying households
-- **SWR (Standard Wrap Rate)**: Enhanced incentives for households earning 60-80% AMI
-- **CPF (Community Partner Fund)**: Comprehensive funding for priority households ≤60% AMI
-- **CERTA (Clean Energy Repair & Technical Assistance)**: Up to $2,000 for structural/safety barrier removal
+- **Savings Within Reach (SWR)**: Increased incentives and financing options for moderate-income households (60-80% AMI), includes On-Bill Repayment
+- **Community Partner Funding (CPF)**: Enhanced incentives through community organizations serving communities of color, rural areas, and low-income households (≤60% AMI)
 
-### Federal IRA Programs
-- **HOMES Rebate**: Performance-based rebates ($2,000-$8,000) for whole-home energy savings
-- **HEAR Rebate**: Point-of-sale rebates for electric appliances (heat pumps up to $8,000, HPWHs up to $1,750, insulation up to $1,600, electrical upgrades up to $4,000)
+### Oregon State Programs
+- **Climate Equity and Resilience Through Action (CERTA)**: $197M EPA-funded program for GHG reduction through energy efficiency, EV incentives, and support for low-income communities
+
+### Federal IRA (Inflation Reduction Act) Programs
+- **HOMES (Home Efficiency Rebates)**: Rebates ($2,000-$8,000) for energy-efficient retrofits like insulation, air sealing, and windows (homeowners and renters)
+- **HEAR (Home Electrification and Appliance Rebates)**: Point-of-sale rebates for high-efficiency electric appliances like heat pumps, primarily for households ≤150% AMI
 
 ### Project Types Covered
 - **Heat Pumps** (ductless, ducted, extended-capacity) - _Stackable with HEAR rebates_
@@ -219,8 +221,9 @@ This is an educational resource. To suggest improvements:
 - Technical requirements and specifications
 
 ### Official Resources (Use These for Authoritative Information)
-- **Energy Trust of Oregon**: [energytrust.org](https://www.energytrust.org) - Official source for Standard, SWR, CPF, CERTA programs
-- **Federal HOMES/HEAR Programs**: Contact your state energy office or visit [energy.gov](https://www.energy.gov) - Verify state implementation status
+- **Energy Trust of Oregon**: [energytrust.org](https://www.energytrust.org) - Official source for Standard, Savings Within Reach, and Community Partner Funding programs
+- **Oregon Department of Energy**: [oregon.gov/energy](https://www.oregon.gov/energy/) - Official source for CERTA program information
+- **Federal HOMES/HEAR Programs (IRA)**: Contact your state energy office or visit [energy.gov](https://www.energy.gov) - Verify Oregon state implementation status
 
 ## 📄 License
 
@@ -231,8 +234,9 @@ This project is provided as educational and informational content only. Data is 
 ## 📧 Contact
 
 For **authoritative, official information** contact:
-- **Energy Trust programs (Standard, SWR, CPF, CERTA)**: Energy Trust of Oregon at [energytrust.org](https://www.energytrust.org)
-- **Federal HOMES/HEAR rebates**: Your state energy office or local program administrator
+- **Energy Trust programs (Standard, Savings Within Reach, Community Partner Funding)**: Energy Trust of Oregon at [energytrust.org](https://www.energytrust.org)
+- **Oregon CERTA program**: Oregon Department of Energy or visit [oregon.gov](https://www.oregon.gov/energy/)
+- **Federal HOMES/HEAR rebates (IRA programs)**: Your state energy office or visit [energy.gov](https://www.energy.gov)
 - **Professional advice**: Licensed contractors, energy auditors, or program-certified professionals
 
 For **questions about this unofficial tool only**: Submit issues or suggestions via the GitHub repository

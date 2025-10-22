@@ -3,7 +3,24 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Residential Incentive Insights – Interactive Tool</title>
+<title>Residential Incentive Insights – Oregon Energy Efficiency Programs</title>
+<meta name="description" content="Unofficial guide to Oregon energy efficiency incentive programs including Energy Trust (Savings Within Reach, Community Partner Funding), CERTA, and federal HOMES/HEAR rebates. Compare costs, incentives, and eligibility." />
+<meta name="keywords" content="Oregon energy efficiency, Energy Trust Oregon, Savings Within Reach, SWR, Community Partner Funding, CPF, CERTA, HOMES rebate, HEAR rebate, heat pump incentives, insulation rebates" />
+<meta name="author" content="Oregon Energy Efficiency Resources" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://kamrawr.github.io/residential-incentive-insights/" />
+
+<!-- Open Graph / Social Media -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://kamrawr.github.io/residential-incentive-insights/" />
+<meta property="og:title" content="Oregon Residential Energy Incentive Guide" />
+<meta property="og:description" content="Explore Oregon energy efficiency programs: Energy Trust, CERTA, and federal IRA rebates for heat pumps, insulation, and more." />
+<meta property="og:site_name" content="Residential Incentive Insights" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Oregon Residential Energy Incentive Guide" />
+<meta name="twitter:description" content="Unofficial guide to Oregon energy efficiency incentive programs and rebates." />
 <style>
   :root{
     --bg:#0b0e12; --panel:#11161d; --muted:#8aa0b3;
@@ -19,15 +36,20 @@
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,"Helvetica Neue",Arial;transition:background-color .3s ease,color .3s ease}
-  header{position:sticky;top:0;z-index:30;background:var(--panel);backdrop-filter:blur(6px);border-bottom:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+  header{position:sticky;top:0;z-index:30;background:var(--panel);backdrop-filter:blur(6px);border-bottom:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.1);transition:all .3s ease}
+  header.collapsed .toolbar{max-height:0;overflow:hidden;opacity:0;margin:0;padding:0}
+  header.collapsed .header-top{margin-bottom:0}
   .wrap{max-width:1100px;margin:0 auto;padding:16px}
-  .header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:16px;flex-wrap:wrap}
+  .header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:16px;flex-wrap:wrap;transition:margin .3s ease}
   .header-left{flex:1;min-width:280px}
-  h1{font-size:20px;margin:0 0 6px 0}
+  h1{font-size:20px;margin:0 0 6px 0;cursor:pointer;user-select:none;display:flex;align-items:center;gap:8px}
+  h1:hover{color:var(--accent)}
+  .collapse-icon{font-size:16px;transition:transform .3s ease}
+  header.collapsed .collapse-icon{transform:rotate(180deg)}
   .sub{color:var(--muted);font-size:13px;line-height:1.5}
   .theme-toggle{cursor:pointer;background:var(--chip);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:10px;display:flex;align-items:center;gap:6px;font-size:13px;transition:all .2s;white-space:nowrap}
   .theme-toggle:hover{border-color:var(--focus);transform:scale(1.05)}
-  .toolbar{display:grid;grid-template-columns:1fr;gap:14px;margin-top:12px}
+  .toolbar{display:grid;grid-template-columns:1fr;gap:14px;margin-top:12px;transition:all .3s ease;max-height:500px;overflow:visible}
   .filter-group{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
   .filter-group label{color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;min-width:120px}
   input[type="search"]{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--panel);color:var(--text);outline:none}
@@ -37,6 +59,8 @@
   .checkbox-item:hover{border-color:var(--focus);background:var(--chip)}
   .checkbox-item input[type="checkbox"]{cursor:pointer;width:16px;height:16px;accent-color:var(--accent)}
   .checkbox-item label{cursor:pointer;font-size:13px;color:var(--text);margin:0}
+  .filter-summary{display:none;font-size:12px;color:var(--muted);margin-top:4px}
+  header.collapsed .filter-summary{display:block}
   .context-box{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;margin:16px 0;box-shadow:0 2px 6px rgba(0,0,0,.1)}
   .context-box h2{margin:0 0 10px 0;font-size:17px;color:var(--accent);font-weight:600}
   .context-box p{margin:6px 0;line-height:1.7;color:var(--text)}
@@ -88,40 +112,46 @@
 </style>
 </head>
 <body>
-<header>
+<a href="#main-content" class="skip-link" style="position:absolute;left:-9999px;z-index:999;padding:1em;background:var(--accent);color:var(--bg);text-decoration:none;font-weight:bold;">Skip to main content</a>
+<header role="banner">
   <div class="wrap">
     <div class="header-top">
       <div class="header-left">
-        <h1>Residential Incentive Insights</h1>
-        <div class="sub">Explore energy efficiency incentive programs including <span class="tooltip">SWR<span class="tooltiptext"><strong>Standard Wrap Rate (SWR)</strong>Provides enhanced incentives for income-qualified households, typically 60-80% of median income. Significantly reduces out-of-pocket costs for energy upgrades.</span></span>, <span class="tooltip">CPF<span class="tooltiptext"><strong>Community Partner Fund (CPF)</strong>Offers comprehensive funding (often 100% coverage) for priority households earning ≤60% area median income. Includes direct-install services and wrap-around support.</span></span>, <span class="tooltip">CERTA<span class="tooltiptext"><strong>Clean Energy Repair & Technical Assistance (CERTA)</strong>Up to $2,000 in funding to address structural or safety barriers (wiring, rot, moisture issues) that prevent energy efficiency upgrades from proceeding.</span></span>, and <span class="tooltip">HOMES/HEAR<span class="tooltiptext"><strong>HOMES & HEAR Rebates</strong>Federal programs: HOMES (Home Owner Managing Energy Savings) provides rebates for whole-home energy savings. HEAR (High-Efficiency Electric Home Rebate) offers point-of-sale rebates for qualifying appliances and upgrades.</span></span>.</div>
+        <h1 id="headerTitle" role="button" tabindex="0" aria-expanded="true" aria-controls="toolbar">
+          <span>Residential Incentive Insights</span>
+          <span class="collapse-icon" aria-hidden="true">▼</span>
+        </h1>
+        <div class="sub">Explore energy efficiency incentive programs including <span class="tooltip">SWR<span class="tooltiptext"><strong>Savings Within Reach (SWR)</strong>Energy Trust of Oregon program providing increased incentives and financing options to help moderate-income households afford energy-saving home upgrades. Offers higher cash incentives and optional On-Bill Repayment financing.</span></span>, <span class="tooltip">CPF<span class="tooltiptext"><strong>Community Partner Funding (CPF)</strong>Energy Trust of Oregon program providing higher incentives to community-based organizations serving communities of color, rural areas, and low-income households. Partners help residents access energy-saving upgrades like weatherization and efficient heating/cooling systems.</span></span>, <span class="tooltip">CERTA<span class="tooltiptext"><strong>Climate Equity and Resilience Through Action (CERTA)</strong>Oregon program using EPA grant funding for greenhouse gas emission reduction initiatives. Provides benefits like energy efficiency improvements, EV incentives, and support for low-income communities through projects in buildings, transportation, and waste management.</span></span>, and <span class="tooltip">HOMES/HEAR<span class="tooltiptext"><strong>Federal IRA Rebate Programs</strong>HOMES (Home Efficiency Rebates): rebates for energy-efficient retrofits like insulation, air sealing, and windows. HEAR (Home Electrification and Appliance Rebates): point-of-sale rebates for high-efficiency electric appliances like heat pumps, primarily for households ≤150% area median income.</span></span>.</div>
+        <div class="filter-summary" id="filterSummary"></div>
       </div>
       <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
         <span id="themeIcon">☀️</span>
         <span id="themeLabel">Light</span>
       </button>
     </div>
-    <div class="toolbar">
-      <input id="q" type="search" placeholder="Quick search (e.g., ductless, windows, CPF, SWR, CERTA, HOMES, HEAR)"/>
-      
+    <div class="toolbar" id="toolbar">
+      <label for="q" class="sr-only" style="position:absolute;left:-9999px;">Search projects and programs</label>
+      <input id="q" type="search" placeholder="Quick search (e.g., ductless, windows, CPF, SWR, CERTA, HOMES, HEAR)" aria-label="Search projects and programs"/>
+
       <div class="filter-group">
-        <label>Project Types:</label>
-        <div class="multi-select" id="projectFilters"></div>
+        <label id="projectTypesLabel">Project Types:</label>
+        <div class="multi-select" id="projectFilters" role="group" aria-labelledby="projectTypesLabel"></div>
       </div>
-      
+
       <div class="filter-group">
-        <label>Audiences:</label>
-        <div class="multi-select" id="audienceFilters"></div>
+        <label id="audiencesLabel">Audiences:</label>
+        <div class="multi-select" id="audienceFilters" role="group" aria-labelledby="audiencesLabel"></div>
       </div>
     </div>
     <div class="row">
-      <button id="btnCopy">Copy Visible Insights</button>
-      <button id="btnExport">Export Visible JSON</button>
-      <span id="msg" class="badge hide"></span>
+      <button id="btnCopy" aria-label="Copy all visible project insights to clipboard">Copy Visible Insights</button>
+      <button id="btnExport" aria-label="Export visible project data as JSON file">Export Visible JSON</button>
+      <span id="msg" class="badge hide" role="status" aria-live="polite"></span>
     </div>
   </div>
 </header>
 
-<main class="wrap">
+<main class="wrap" id="main-content" role="main">
   <div class="disclaimer">
     <strong>⚠️ IMPORTANT DISCLAIMER:</strong> This is an <strong>unofficial, informational tool only</strong> and does not represent official guidance, recommendations, or endorsements from Energy Trust of Oregon, any government agency, or program administrator. All program data is compiled from publicly available sources and may be outdated, incomplete, or subject to change without notice.
     <br><br>
@@ -139,29 +169,33 @@
     <h3>📋 Program Overview & Income Qualifications (Unofficial Summary - Verify Before Applying)</h3>
     <p><strong>Standard Incentives:</strong> Typically available to all qualifying households regardless of income. Partial cost coverage (approximately 15-60% depending on measure). <em>Verify current eligibility and amounts.</em></p>
 
+    <p style="background:var(--chip);border:1px solid var(--border);border-radius:8px;padding:10px;margin:10px 0;">
+      💡 <strong>Check Your Eligibility:</strong> Use the <a href="https://kamrawr.github.io/oregon-income-calculator/" target="_blank" style="color:var(--accent);font-weight:600;">Oregon Income Eligibility Calculator</a> to determine which program tier you may qualify for based on your household income and county.
+    </p>
+
     <div class="income-box">
-      <strong>SWR (Standard Wrap Rate) - Approximate Eligibility:</strong>
-      Generally for households earning 60-80% of Area Median Income (AMI). For a family of 4 in Oregon, this may be approximately $55,000-$73,000 annually (varies significantly by county and household size). May provide enhanced incentive rates (approximately 60-100% coverage). <em><strong>Verify current income limits and coverage with Energy Trust of Oregon before applying.</strong></em>
+      <strong>Savings Within Reach (SWR) - Approximate Eligibility:</strong>
+      Energy Trust of Oregon program for moderate-income households, generally earning 60-80% of Area Median Income (AMI). For a family of 4 in Oregon, this may be approximately $55,000-$73,000 annually (varies significantly by county and household size). Provides increased cash incentives for energy upgrades and optional On-Bill Repayment financing through utility bills. <em><strong>Verify current income limits, incentive amounts, and financing options with Energy Trust of Oregon before applying.</strong></em>
     </div>
 
     <div class="income-box">
-      <strong>CPF (Community Partner Fund) - Approximate Eligibility:</strong>
-      Generally for priority households earning ≤60% AMI. For a family of 4 in Oregon, this may be approximately $55,000 or less annually (varies by county and household size). May cover up to 100% of project costs with direct-install services. <em><strong>Verify current income limits and available services with Energy Trust of Oregon before applying.</strong></em>
+      <strong>Community Partner Funding (CPF) - Approximate Eligibility:</strong>
+      Energy Trust of Oregon program providing enhanced incentives through community-based organizations serving communities of color, rural areas, and low-income households (typically ≤60% AMI). For a family of 4 in Oregon, this may be approximately $55,000 or less annually (varies by county and household size). Community partners help residents access energy-saving upgrades like weatherization and efficient heating/cooling systems. <em><strong>Verify current income limits and available community partners with Energy Trust of Oregon before applying.</strong></em>
     </div>
 
     <div class="income-box">
-      <strong>CERTA (Clean Energy Repair & Technical Assistance):</strong>
-      Typically available to income-qualified households participating in SWR or CPF programs. May provide up to $2,000 to address barriers like outdated electrical, structural repairs, or moisture issues. <em><strong>Verify current funding limits and eligible repairs with program administrators.</strong></em>
+      <strong>Climate Equity and Resilience Through Action (CERTA):</strong>
+      Oregon program funded by a $197 million EPA grant to reduce greenhouse gas emissions. Works with state agencies to implement projects in buildings, transportation, and waste management. Provides energy efficiency improvements, electric vehicle incentives, and support for low-income communities. May include funding for barriers like outdated electrical, structural repairs, or moisture issues that prevent energy upgrades. <em><strong>Verify current program availability, eligible projects, and application process with Oregon state agencies.</strong></em>
     </div>
 
     <div class="income-box">
-      <strong>HOMES Rebate (Federal IRA Program - Approximate Information):</strong>
-      Performance-based rebates for whole-home energy savings. May be available to all households; enhanced rebates potentially for households ≤80% AMI. Rebates may range from $2,000-$8,000 based on energy savings achieved (requires energy modeling). <em><strong>Verify current federal program status, state implementation, and requirements before planning projects.</strong></em>
+      <strong>HOMES (Home Efficiency Rebates - Federal IRA Program - Approximate Information):</strong>
+      Part of the Inflation Reduction Act (IRA) providing rebates for energy-efficient retrofits including insulation, air sealing, and energy-efficient windows. Available to both homeowners and renters; higher rebates for low-income households. Rebates may range from $2,000-$8,000 based on energy savings achieved. May require home energy audit. <em><strong>Verify current federal program status, Oregon state implementation, eligibility, and requirements before planning projects.</strong></em>
     </div>
 
     <div class="income-box">
-      <strong>HEAR Rebate (High-Efficiency Electric Home Rebate - Federal IRA - Approximate Information):</strong>
-      Point-of-sale rebates for electric appliances and upgrades. Approximate income limits: up to $8,000 for households ≤80% AMI; up to $14,000 for households ≤150% AMI. May cover heat pumps ($8,000), heat pump water heaters ($1,750), insulation ($1,600), electrical upgrades ($4,000), and more. <em><strong>Verify current federal program status, state implementation, and exact rebate amounts before purchasing.</strong></em>
+      <strong>HEAR (Home Electrification and Appliance Rebates - Federal IRA - Approximate Information):</strong>
+      Part of the Inflation Reduction Act (IRA) providing point-of-sale rebates for high-efficiency electric appliances, primarily for low-to-moderate-income households (typically ≤150% area median income). May cover heat pumps, heat pump water heaters, and related upgrades like insulation and electrical panel improvements. Rebates can cover a significant portion of project costs. <em><strong>Verify current federal program status, Oregon state implementation, and exact rebate amounts before purchasing.</strong></em>
     </div>
 
     <p style="margin-top:10px;font-size:12px;color:var(--muted);">
@@ -169,11 +203,11 @@
     </p>
   </div>
 
-  <div id="contextBox" class="context-box"></div>
-  <div id="cards" class="grid"></div>
-  <div class="footer">
+  <div id="contextBox" class="context-box" role="complementary" aria-label="Project context information"></div>
+  <div id="cards" class="grid" role="region" aria-label="Project details"></div>
+  <footer class="footer" role="contentinfo">
     <strong>⚠️ REMINDER:</strong> This unofficial tool provides approximate guidance only. All costs, incentive amounts, and program details are subject to change. <strong>Never make significant financial purchases or commitments based solely on this information.</strong> Always verify current specifications, eligibility requirements, and incentive amounts with official program administrators and obtain professional quotes before proceeding. Data compiled from publicly available sources; accuracy not guaranteed.
-  </div>
+  </footer>
 </main>
 
 <script>
@@ -182,35 +216,35 @@ const OVERVIEW_CONTEXT = {
   default: {
     title: "Welcome to Residential Incentive Insights (Unofficial Reference Tool)",
     content: `This unofficial reference tool provides general information about residential energy efficiency incentive programs, including
-      Energy Trust of Oregon programs (Standard, SWR, CPF, CERTA) and federal HOMES/HEAR rebates compiled from publicly available sources.
-      Use the filters below to explore project types and view approximate guidance. <strong>All information is subject to change and must be
-      verified with official program administrators before making any financial decisions.</strong> This tool does not constitute professional
-      advice or official program guidance.`
+      Energy Trust of Oregon programs (Standard, Savings Within Reach, Community Partner Funding), Oregon CERTA program, and federal HOMES/HEAR
+      rebates compiled from publicly available sources. Use the filters below to explore project types and view approximate guidance.
+      <strong>All information is subject to change and must be verified with official program administrators before making any financial
+      decisions.</strong> This tool does not constitute professional advice or official program guidance.`
   },
   heat_pumps: {
     title: "Heat Pumps: The Electrification Leader",
     content: `Heat pumps are the cornerstone of residential electrification. They deliver 30–50% energy savings and work best when paired
-      with weatherization upgrades. CPF and SWR tiers make them accessible across income levels, while federal HEAR rebates add up to $8,000
-      additional funding. Market-rate options respond to financing and insulation bundles.`,
+      with weatherization upgrades. Community Partner Funding and Savings Within Reach make them accessible across income levels, while
+      federal HEAR rebates add up to $8,000 additional funding. Market-rate options respond to financing and insulation bundles.`,
     keyPoints: ["Highest energy impact", "Multiple funding tiers (Energy Trust + HEAR)", "Best when bundled with insulation"]
   },
   insulation_and_envelope: {
     title: "Insulation & Envelope: The Foundation",
-    content: `Dollar-for-dollar, insulation delivers the highest energy savings and is essential for heat pump performance. CPF and CERTA
-      funding remove barriers for income-qualified households. HEAR rebates provide up to $1,600 additional funding, and HOMES rebates reward
-      whole-home performance improvements. Target poorly insulated homes for maximum impact.`,
+    content: `Dollar-for-dollar, insulation delivers the highest energy savings and is essential for heat pump performance. Community Partner
+      Funding and CERTA funding remove barriers for income-qualified households. HEAR rebates provide up to $1,600 additional funding, and
+      HOMES rebates reward whole-home performance improvements. Target poorly insulated homes for maximum impact.`,
     keyPoints: ["Best ROI per dollar", "Stackable funding (Energy Trust + CERTA + HEAR/HOMES)", "Prerequisite for HVAC efficiency"]
   },
   controls_and_thermostats: {
     title: "Smart Controls: Small Investment, Big Returns",
-    content: `Smart thermostats cost under $250 but deliver 8–15% energy savings. They're perfect bundled with heat pumps to prevent 
-      inefficient auxiliary heat. Direct-install via CPF removes upfront barriers.`,
+    content: `Smart thermostats cost under $250 but deliver 8–15% energy savings. They're perfect bundled with heat pumps to prevent
+      inefficient auxiliary heat. Direct-install via Community Partner Funding removes upfront barriers.`,
     keyPoints: ["Low cost, high payback", "Behavior change enabler", "Enhances HVAC performance"]
   },
   windows: {
     title: "Windows: Comfort Over Savings",
-    content: `Window replacements offer significant comfort improvements but limited financial payback. Prioritize for health drivers 
-      (condensation, noise) or in CPF projects where co-funding covers costs. Always bundle with air-sealing.`,
+    content: `Window replacements offer significant comfort improvements but limited financial payback. Prioritize for health drivers
+      (condensation, noise) or in Community Partner Funding projects where co-funding covers costs. Always bundle with air-sealing.`,
     keyPoints: ["High comfort impact", "Long payback period", "Best for equity-driven projects"]
   },
   gas_heating_systems: {
@@ -506,6 +540,9 @@ const contextBoxEl = document.getElementById("contextBox");
 const themeToggleBtn = document.getElementById("themeToggle");
 const themeIconEl = document.getElementById("themeIcon");
 const themeLabelEl = document.getElementById("themeLabel");
+const headerEl = document.querySelector("header");
+const headerTitleEl = document.getElementById("headerTitle");
+const filterSummaryEl = document.getElementById("filterSummary");
 
 /** ---------- THEME ---------- **/
 function applyTheme(theme){
@@ -523,6 +560,43 @@ function applyTheme(theme){
 
 function toggleTheme(){
   applyTheme(currentTheme==="dark" ? "light" : "dark");
+}
+
+/** ---------- HEADER COLLAPSE ---------- **/
+function toggleHeader(){
+  const isCollapsed = headerEl.classList.toggle("collapsed");
+  headerTitleEl.setAttribute("aria-expanded", !isCollapsed);
+  updateFilterSummary();
+}
+
+function updateFilterSummary(){
+  if(!headerEl.classList.contains("collapsed")) return;
+
+  const parts = [];
+
+  // Add project count
+  if(selectedProjects.size > 0){
+    parts.push(`${selectedProjects.size} project${selectedProjects.size===1?'':'s'}`);
+  } else {
+    parts.push("All projects");
+  }
+
+  // Add audience count
+  const audCount = selectedAudiences.size;
+  if(audCount < 3){
+    const audNames = Array.from(selectedAudiences).map(a=>AUDIENCE_OPTIONS.find(o=>o.value===a)?.label).join(", ");
+    parts.push(audNames);
+  } else {
+    parts.push("All audiences");
+  }
+
+  // Add search if present
+  const search = qEl.value.trim();
+  if(search){
+    parts.push(`"${search}"`);
+  }
+
+  filterSummaryEl.textContent = parts.join(" · ");
 }
 
 /** ---------- CONTEXT BOX ---------- **/
@@ -703,6 +777,7 @@ function renderCards(){
 function renderAll(){
   renderContext();
   renderCards();
+  updateFilterSummary();
 }
 
 function flash(text){
@@ -762,8 +837,28 @@ document.getElementById("btnCopy").onclick = ()=>{
 };
 document.getElementById("btnExport").onclick = exportVisibleJSON;
 themeToggleBtn.onclick = toggleTheme;
+headerTitleEl.onclick = toggleHeader;
 
-qEl.addEventListener("input", renderCards);
+// Keyboard accessibility for header toggle
+headerTitleEl.addEventListener("keydown", (e)=>{
+  if(e.key === "Enter" || e.key === " "){
+    e.preventDefault();
+    toggleHeader();
+  }
+});
+
+// Skip link functionality
+document.querySelector(".skip-link").addEventListener("focus", function(){
+  this.style.left = "0";
+});
+document.querySelector(".skip-link").addEventListener("blur", function(){
+  this.style.left = "-9999px";
+});
+
+qEl.addEventListener("input", ()=>{
+  renderCards();
+  updateFilterSummary();
+});
 
 // init
 applyTheme(currentTheme);
