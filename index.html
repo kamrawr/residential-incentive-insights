@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Residential Incentive Insights – Interactive</title>
+<title>Residential Incentive Insights – Interactive Tool</title>
 <style>
   :root{
     --bg:#0b0e12; --panel:#11161d; --muted:#8aa0b3;
@@ -62,6 +62,8 @@
   button{cursor:pointer;background:var(--chip);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:10px;transition:all .2s}
   button:hover{border-color:var(--focus);background:var(--panel)}
   .footer{color:var(--muted);font-size:12px;margin:22px 0}
+  .disclaimer{background:var(--panel);border-left:3px solid var(--warn);padding:14px;margin:16px 0;border-radius:8px;font-size:13px;line-height:1.6}
+  .disclaimer strong{color:var(--warn)}
   .hide{display:none}
   .tag{font-size:11px;padding:4px 8px;border-radius:999px;border:1px solid var(--border);background:var(--chip);color:var(--text)}
   .tag.green{background:#dcfce7;border-color:#16a34a;color:#166534}
@@ -73,6 +75,16 @@
   .badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#9fb6c8;background:#0d1520;border:1px solid var(--border);padding:4px 8px;border-radius:999px}
   .sep{height:1px;background:var(--border);margin:10px 0}
   a{color:var(--accent)}
+  .tooltip{position:relative;display:inline-block;border-bottom:1px dotted var(--accent);cursor:help}
+  .tooltip .tooltiptext{visibility:hidden;width:320px;background:var(--panel);color:var(--text);text-align:left;border-radius:8px;padding:12px;position:absolute;z-index:100;bottom:125%;left:50%;margin-left:-160px;opacity:0;transition:opacity .3s;border:1px solid var(--border);box-shadow:0 4px 12px rgba(0,0,0,.3);font-size:12px;line-height:1.5}
+  .tooltip .tooltiptext strong{display:block;margin-bottom:6px;color:var(--accent);font-size:13px}
+  .tooltip:hover .tooltiptext{visibility:visible;opacity:1}
+  .tooltip .tooltiptext::after{content:"";position:absolute;top:100%;left:50%;margin-left:-5px;border-width:5px;border-style:solid;border-color:var(--border) transparent transparent transparent}
+  .program-info{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:14px;margin:12px 0}
+  .program-info h3{margin:0 0 8px 0;font-size:14px;color:var(--accent2)}
+  .program-info p{margin:6px 0;font-size:13px;line-height:1.6}
+  .program-info .income-box{background:var(--chip);border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:8px}
+  .program-info .income-box strong{color:var(--good);display:block;margin-bottom:4px}
 </style>
 </head>
 <body>
@@ -81,7 +93,7 @@
     <div class="header-top">
       <div class="header-left">
         <h1>Residential Incentive Insights</h1>
-        <div class="sub">Select project types and audiences to view tailored, data-driven guidance.</div>
+        <div class="sub">Explore energy efficiency incentive programs including <span class="tooltip">SWR<span class="tooltiptext"><strong>Standard Wrap Rate (SWR)</strong>Provides enhanced incentives for income-qualified households, typically 60-80% of median income. Significantly reduces out-of-pocket costs for energy upgrades.</span></span>, <span class="tooltip">CPF<span class="tooltiptext"><strong>Community Partner Fund (CPF)</strong>Offers comprehensive funding (often 100% coverage) for priority households earning ≤60% area median income. Includes direct-install services and wrap-around support.</span></span>, <span class="tooltip">CERTA<span class="tooltiptext"><strong>Clean Energy Repair & Technical Assistance (CERTA)</strong>Up to $2,000 in funding to address structural or safety barriers (wiring, rot, moisture issues) that prevent energy efficiency upgrades from proceeding.</span></span>, and <span class="tooltip">HOMES/HEAR<span class="tooltiptext"><strong>HOMES & HEAR Rebates</strong>Federal programs: HOMES (Home Owner Managing Energy Savings) provides rebates for whole-home energy savings. HEAR (High-Efficiency Electric Home Rebate) offers point-of-sale rebates for qualifying appliances and upgrades.</span></span>.</div>
       </div>
       <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
         <span id="themeIcon">☀️</span>
@@ -89,7 +101,7 @@
       </button>
     </div>
     <div class="toolbar">
-      <input id="q" type="search" placeholder="Quick search (e.g., ductless, windows, CPF, SWR, audit)"/>
+      <input id="q" type="search" placeholder="Quick search (e.g., ductless, windows, CPF, SWR, CERTA, HOMES, HEAR)"/>
       
       <div class="filter-group">
         <label>Project Types:</label>
@@ -110,10 +122,57 @@
 </header>
 
 <main class="wrap">
+  <div class="disclaimer">
+    <strong>⚠️ IMPORTANT DISCLAIMER:</strong> This is an <strong>unofficial, informational tool only</strong> and does not represent official guidance, recommendations, or endorsements from Energy Trust of Oregon, any government agency, or program administrator. All program data is compiled from publicly available sources and may be outdated, incomplete, or subject to change without notice.
+    <br><br>
+    <strong>Before making any financial decisions or purchases:</strong>
+    <ul style="margin:8px 0 0 20px;padding:0;">
+      <li>Verify all current program requirements, eligibility criteria, and incentive amounts directly with official program administrators</li>
+      <li>Confirm income qualifications and available funding with Energy Trust of Oregon and federal program representatives</li>
+      <li>Consult with qualified professionals and obtain multiple quotes before committing to any projects</li>
+      <li>Review official program documentation and application requirements</li>
+    </ul>
+    <strong>This tool is provided "as-is" without warranties of any kind.</strong> The author assumes no liability for decisions made based on this information.
+  </div>
+
+  <div class="program-info">
+    <h3>📋 Program Overview & Income Qualifications (Unofficial Summary - Verify Before Applying)</h3>
+    <p><strong>Standard Incentives:</strong> Typically available to all qualifying households regardless of income. Partial cost coverage (approximately 15-60% depending on measure). <em>Verify current eligibility and amounts.</em></p>
+
+    <div class="income-box">
+      <strong>SWR (Standard Wrap Rate) - Approximate Eligibility:</strong>
+      Generally for households earning 60-80% of Area Median Income (AMI). For a family of 4 in Oregon, this may be approximately $55,000-$73,000 annually (varies significantly by county and household size). May provide enhanced incentive rates (approximately 60-100% coverage). <em><strong>Verify current income limits and coverage with Energy Trust of Oregon before applying.</strong></em>
+    </div>
+
+    <div class="income-box">
+      <strong>CPF (Community Partner Fund) - Approximate Eligibility:</strong>
+      Generally for priority households earning ≤60% AMI. For a family of 4 in Oregon, this may be approximately $55,000 or less annually (varies by county and household size). May cover up to 100% of project costs with direct-install services. <em><strong>Verify current income limits and available services with Energy Trust of Oregon before applying.</strong></em>
+    </div>
+
+    <div class="income-box">
+      <strong>CERTA (Clean Energy Repair & Technical Assistance):</strong>
+      Typically available to income-qualified households participating in SWR or CPF programs. May provide up to $2,000 to address barriers like outdated electrical, structural repairs, or moisture issues. <em><strong>Verify current funding limits and eligible repairs with program administrators.</strong></em>
+    </div>
+
+    <div class="income-box">
+      <strong>HOMES Rebate (Federal IRA Program - Approximate Information):</strong>
+      Performance-based rebates for whole-home energy savings. May be available to all households; enhanced rebates potentially for households ≤80% AMI. Rebates may range from $2,000-$8,000 based on energy savings achieved (requires energy modeling). <em><strong>Verify current federal program status, state implementation, and requirements before planning projects.</strong></em>
+    </div>
+
+    <div class="income-box">
+      <strong>HEAR Rebate (High-Efficiency Electric Home Rebate - Federal IRA - Approximate Information):</strong>
+      Point-of-sale rebates for electric appliances and upgrades. Approximate income limits: up to $8,000 for households ≤80% AMI; up to $14,000 for households ≤150% AMI. May cover heat pumps ($8,000), heat pump water heaters ($1,750), insulation ($1,600), electrical upgrades ($4,000), and more. <em><strong>Verify current federal program status, state implementation, and exact rebate amounts before purchasing.</strong></em>
+    </div>
+
+    <p style="margin-top:10px;font-size:12px;color:var(--muted);">
+      <em><strong>⚠️ All figures above are approximate and subject to change.</strong> Income limits vary significantly by county, household size, and program year. Federal HOMES/HEAR programs may not yet be fully implemented in all states. <strong>Always contact official program administrators</strong> or visit <a href="https://www.energytrust.org" target="_blank">energytrust.org</a> (for Energy Trust programs) or your state energy office (for federal programs) to verify current eligibility, amounts, and timelines before making any financial commitments.</em>
+    </p>
+  </div>
+
   <div id="contextBox" class="context-box"></div>
   <div id="cards" class="grid"></div>
   <div class="footer">
-    Built for quick, offline field use. Costs are typical ranges; always verify current specs and PI sheets before quoting.
+    <strong>⚠️ REMINDER:</strong> This unofficial tool provides approximate guidance only. All costs, incentive amounts, and program details are subject to change. <strong>Never make significant financial purchases or commitments based solely on this information.</strong> Always verify current specifications, eligibility requirements, and incentive amounts with official program administrators and obtain professional quotes before proceeding. Data compiled from publicly available sources; accuracy not guaranteed.
   </div>
 </main>
 
@@ -121,23 +180,26 @@
 /** ---------- OVERVIEW CONTEXT ---------- **/
 const OVERVIEW_CONTEXT = {
   default: {
-    title: "Welcome to Residential Incentive Insights",
-    content: `This interactive tool helps program managers, homeowners, and contractors navigate residential energy efficiency incentives. 
-      Use the filters below to explore project types and view tailored guidance based on your role. Each project includes cost analysis, 
-      implementation priorities, and stakeholder-specific action items.`
+    title: "Welcome to Residential Incentive Insights (Unofficial Reference Tool)",
+    content: `This unofficial reference tool provides general information about residential energy efficiency incentive programs, including
+      Energy Trust of Oregon programs (Standard, SWR, CPF, CERTA) and federal HOMES/HEAR rebates compiled from publicly available sources.
+      Use the filters below to explore project types and view approximate guidance. <strong>All information is subject to change and must be
+      verified with official program administrators before making any financial decisions.</strong> This tool does not constitute professional
+      advice or official program guidance.`
   },
   heat_pumps: {
     title: "Heat Pumps: The Electrification Leader",
-    content: `Heat pumps are the cornerstone of residential electrification. They deliver 30–50% energy savings and work best when paired 
-      with weatherization upgrades. CPF and SWR tiers make them accessible across income levels, while market-rate options respond to 
-      financing and insulation bundles.`,
-    keyPoints: ["Highest energy impact", "Multiple funding tiers available", "Best when bundled with insulation"]
+    content: `Heat pumps are the cornerstone of residential electrification. They deliver 30–50% energy savings and work best when paired
+      with weatherization upgrades. CPF and SWR tiers make them accessible across income levels, while federal HEAR rebates add up to $8,000
+      additional funding. Market-rate options respond to financing and insulation bundles.`,
+    keyPoints: ["Highest energy impact", "Multiple funding tiers (Energy Trust + HEAR)", "Best when bundled with insulation"]
   },
   insulation_and_envelope: {
     title: "Insulation & Envelope: The Foundation",
-    content: `Dollar-for-dollar, insulation delivers the highest energy savings and is essential for heat pump performance. CPF and CERTA 
-      funding remove barriers for income-qualified households. Target poorly insulated homes for maximum impact.`,
-    keyPoints: ["Best ROI per dollar", "Prerequisite for HVAC efficiency", "CERTA unlocks stuck projects"]
+    content: `Dollar-for-dollar, insulation delivers the highest energy savings and is essential for heat pump performance. CPF and CERTA
+      funding remove barriers for income-qualified households. HEAR rebates provide up to $1,600 additional funding, and HOMES rebates reward
+      whole-home performance improvements. Target poorly insulated homes for maximum impact.`,
+    keyPoints: ["Best ROI per dollar", "Stackable funding (Energy Trust + CERTA + HEAR/HOMES)", "Prerequisite for HVAC efficiency"]
   },
   controls_and_thermostats: {
     title: "Smart Controls: Small Investment, Big Returns",
@@ -159,9 +221,10 @@ const OVERVIEW_CONTEXT = {
   },
   water_heating_systems: {
     title: "Water Heating: The Electrification Partner",
-    content: `Heat pump water heaters align with decarbonization goals and save on operating costs. CPF can cover full costs for priority 
-      households. Always verify electrical capacity and space requirements before installation.`,
-    keyPoints: ["Supports electrification", "Moderate energy savings", "Best bundled with other upgrades"]
+    content: `Heat pump water heaters align with decarbonization goals and save on operating costs. CPF can cover full costs for priority
+      households, and HEAR rebates add up to $1,750 for qualifying installations. Always verify electrical capacity and space requirements
+      before installation.`,
+    keyPoints: ["Supports electrification", "Stackable rebates (Energy Trust + HEAR)", "Best bundled with other upgrades"]
   },
   home_energy_assessment_and_certa: {
     title: "Assessments: Your Project Gateway",
@@ -175,34 +238,35 @@ const OVERVIEW_CONTEXT = {
 const DATA = {
   heat_pumps: {
     title: "Heat Pumps (ductless, ducted, extended-capacity)",
-    summary: "High-impact electrification; strong savings; tiered incentives.",
+    summary: "Typically high-impact electrification; potential strong savings; tiered incentives may include federal HEAR rebates (verify availability).",
     impact_tags: ["High impact","Electrification"],
     cost_and_incentive_ratio: {
       average_cost_usd: "2500–15000",
       standard_incentive_usd: 800,
       coverage_percent: "16–37%",
-      swr_cpf_coverage_percent: "36–100%"
+      swr_cpf_coverage_percent: "36–100%",
+      hear_rebate_usd: "Up to $8,000 (≤80% AMI) or $8,000 (≤150% AMI)"
     },
     equity_and_market_leverage: [
-      "CPF & no-cost tiers remove upfront barriers.",
-      "Standard tier responds to financing + insulation bundles."
+      "CPF & no-cost tiers may remove upfront barriers; HEAR rebates may stack for income-qualified households (verify current availability).",
+      "Standard tier + HEAR rebates may respond to financing + insulation bundles (verify program terms)."
     ],
     implementation_priorities: [
-      "HSPF2 ≥ 8.1; correct sizing; aux heat lockout ≤ 35°F.",
-      "QA/QC via trade-ally network; target resistance or FA electric homes."
+      "Typical specs: HSPF2 ≥ 8.1; correct sizing; aux heat lockout ≤ 35°F (verify current requirements).",
+      "QA/QC via trade-ally network; target resistance or FA electric homes (verify program participation)."
     ],
     stakeholder_value: {
       program_manager: [
-        "Bundle with insulation to maximize realized savings.",
-        "Track adoption; consider on-bill financing for market-rate."
+        "Consider bundling with insulation to potentially maximize savings; coordinate possible HEAR rebate stacking (verify eligibility).",
+        "Track adoption; consider on-bill financing options; educate on potential HOMES/HEAR opportunities (verify program status)."
       ],
       homeowner: [
-        "Cuts heating/cooling bills 30–50%.",
-        "SWR reduces cost; CPF can be no-cost."
+        "May cut heating/cooling bills 30–50% (actual savings vary); potential to stack Energy Trust + HEAR rebates (verify availability).",
+        "SWR may reduce cost; CPF may offer no-cost options; HEAR may add up to $8,000 for qualifying households (verify all before purchasing)."
       ],
       contractor: [
-        "Pre-approval for CPF; load calcs + photos.",
-        "Commissioning & homeowner maintenance guidance."
+        "Pre-approval may be required for CPF; load calcs + photos typically needed; verify HEAR eligibility if applicable.",
+        "Provide commissioning & homeowner maintenance guidance; coordinate federal and state rebate timing (verify current processes)."
       ]
     }
   },
@@ -244,17 +308,18 @@ const DATA = {
 
   water_heating_systems: {
     title: "Water Heating (heat-pump & tankless gas)",
-    summary: "Moderate savings; best when bundled with electrification.",
+    summary: "Moderate savings; best when bundled with electrification; HEAR rebates available for HPWH.",
     impact_tags: ["Medium impact","Hot water"],
     cost_and_incentive_ratio: {
       hpwh_cost_usd: "3600–6500",
       hpwh_incentive_usd: 240,
       tankless_cost_usd: "1200–3500",
-      tankless_incentive_usd: 400
+      tankless_incentive_usd: 400,
+      hear_hpwh_rebate_usd: "Up to $1,750 (income-qualified)"
     },
     equity_and_market_leverage: [
-      "CPF can fully fund HPWH in priority communities.",
-      "HPWH aligns with decarbonization; tankless suits transition homes."
+      "CPF can fully fund HPWH in priority communities; HEAR rebates stack for additional savings.",
+      "HPWH aligns with decarbonization; tankless suits transition homes (no HEAR rebate)."
     ],
     implementation_priorities: [
       "Check electric capacity (30A), space, condensate for HPWH.",
@@ -262,33 +327,35 @@ const DATA = {
     ],
     stakeholder_value: {
       program_manager: [
-        "Bundle HPWH with heat pump or panel upgrades for scale.",
-        "Use CPF to overcome upfront barriers."
+        "Bundle HPWH with heat pump or panel upgrades for scale; coordinate HEAR rebate applications.",
+        "Use CPF to overcome upfront barriers; promote federal rebate stacking."
       ],
       homeowner: [
-        "Lower operating cost; quiet, efficient.",
-        "CPF may eliminate upfront cost."
+        "Lower operating cost; quiet, efficient; stack Energy Trust + HEAR for up to $1,990 total rebates.",
+        "CPF may eliminate upfront cost; HEAR rebate applied at point of sale for qualifying households."
       ],
       contractor: [
-        "Pre-site checks (power, drain, airflow).",
-        "Customer orientation on temp/filters."
+        "Pre-site checks (power, drain, airflow); verify HEAR eligibility and coordinate applications.",
+        "Customer orientation on temp/filters; submit for both state and federal rebates."
       ]
     }
   },
 
   insulation_and_envelope: {
     title: "Insulation & Envelope (attic, wall, floor)",
-    summary: "Highest $/savings; prerequisite for heat-pump performance.",
+    summary: "Highest $/savings; prerequisite for heat-pump performance; HEAR + HOMES rebates available.",
     impact_tags: ["Very high impact","Weatherization"],
     cost_and_incentive_ratio: {
       average_cost_per_sqft_usd: "1.0–4.5",
       standard_coverage: "50–60%",
       swr_cpf_coverage: "60–120%",
-      certa_fund_usd: 2000
+      certa_fund_usd: 2000,
+      hear_insulation_rebate_usd: "Up to $1,600 (income-qualified)",
+      homes_rebate_usd: "$2,000–$8,000 (whole-home performance)"
     },
     equity_and_market_leverage: [
-      "CPF + CERTA remove structural barriers (wiring, rot, moisture).",
-      "Link with health/IAQ funding to widen access."
+      "CPF + CERTA remove structural barriers (wiring, rot, moisture); HEAR/HOMES rebates stack for maximum coverage.",
+      "Link with health/IAQ funding to widen access; HOMES rewards comprehensive energy savings."
     ],
     implementation_priorities: [
       "Audit R-values; insulate to R-38 attic, R-30 floor (SF), R-22 (MH).",
@@ -296,32 +363,33 @@ const DATA = {
     ],
     stakeholder_value: {
       program_manager: [
-        "Target worst-insulated homes for highest returns.",
-        "Use CERTA to unlock 'stuck' projects."
+        "Target worst-insulated homes for highest returns; coordinate HEAR/HOMES rebate stacking for comprehensive projects.",
+        "Use CERTA to unlock 'stuck' projects; promote whole-home approach for HOMES eligibility."
       ],
       homeowner: [
-        "Comfort year-round; big bill savings; often $0 under CPF.",
-        "SWR typically halves out-of-pocket cost."
+        "Comfort year-round; big bill savings; often $0 under CPF + HEAR stacking (up to $1,600 HEAR + standard incentives).",
+        "SWR typically halves out-of-pocket cost; HOMES rebates reward comprehensive upgrades ($2,000-$8,000)."
       ],
       contractor: [
-        "Address rim joists & knee walls; vapor details matter.",
-        "Follow CERTA workflow for enabling repairs."
+        "Address rim joists & knee walls; vapor details matter; document for HEAR/HOMES applications.",
+        "Follow CERTA workflow for enabling repairs; coordinate energy modeling for HOMES rebates."
       ]
     }
   },
 
   windows: {
     title: "Windows",
-    summary: "High comfort; low financial payback; equity-driven use case.",
+    summary: "High comfort; low financial payback; equity-driven use case; limited federal rebate support.",
     impact_tags: ["Comfort","Low energy ROI"],
     cost_and_incentive_ratio: {
       avg_window_cost_usd: 600,
       incentive_per_sqft_usd: "1.0–1.5",
-      coverage_percent: "2–3%"
+      coverage_percent: "2–3%",
+      homes_contribution: "Contributes to whole-home savings (HOMES rebate)"
     },
     equity_and_market_leverage: [
-      "CPF enhanced windows may cover full cost with co-funding.",
-      "Prioritize single-pane / metal-framed double-pane homes."
+      "CPF enhanced windows may cover full cost with co-funding; HOMES rebates reward as part of comprehensive upgrades.",
+      "Prioritize single-pane / metal-framed double-pane homes; best ROI when bundled with insulation."
     ],
     implementation_priorities: [
       "Verify U-value tiers (≤0.22 or 0.23–0.27).",
@@ -329,32 +397,33 @@ const DATA = {
     ],
     stakeholder_value: {
       program_manager: [
-        "Use selectively for health/condensation, noise, or safety drivers.",
-        "Favor CPF projects where co-funding exists."
+        "Use selectively for health/condensation, noise, or safety drivers; bundle for HOMES eligibility.",
+        "Favor CPF projects where co-funding exists; track contribution to whole-home savings."
       ],
       homeowner: [
-        "Major comfort upgrade; less bill impact unless replacing single-pane.",
-        "CPF may enable no-cost installs."
+        "Major comfort upgrade; less bill impact unless replacing single-pane; contributes to HOMES rebate when bundled.",
+        "CPF may enable no-cost installs; part of comprehensive energy savings strategy."
       ],
       contractor: [
-        "U-factor documentation; measure conditions correctly.",
-        "Educate on ventilation to manage condensation."
+        "U-factor documentation; measure conditions correctly; include in HOMES energy modeling if applicable.",
+        "Educate on ventilation to manage condensation; coordinate with other upgrades."
       ]
     }
   },
 
   controls_and_thermostats: {
     title: "Controls & Thermostats",
-    summary: "Low-cost, high-payback; boosts HVAC performance.",
+    summary: "Low-cost, high-payback; boosts HVAC performance; no direct federal rebate.",
     impact_tags: ["High ROI","Behavior + control"],
     cost_and_incentive_ratio: {
       device_cost_usd: "113–239",
       incentive_usd: 250,
-      coverage_percent: "≈100%"
+      coverage_percent: "≈100%",
+      federal_rebate: "None (not covered by HEAR/HOMES)"
     },
     equity_and_market_leverage: [
-      "CPF direct-install enables instant comfort and savings.",
-      "Pair with heat pumps to curb auxiliary heat."
+      "CPF direct-install enables instant comfort and savings; enhances performance of HEAR-eligible heat pumps.",
+      "Pair with heat pumps to curb auxiliary heat; critical for optimizing federal rebate investments."
     ],
     implementation_priorities: [
       "Maintain approved model list & compatibility matrix.",
@@ -362,33 +431,34 @@ const DATA = {
     ],
     stakeholder_value: {
       program_manager: [
-        "Great uptake driver; keep funded as a bundle.",
-        "Track persistence with follow-up nudges."
+        "Great uptake driver; keep funded as a bundle; educate on maximizing HEAR heat pump rebates.",
+        "Track persistence with follow-up nudges; optimize federal rebate-eligible equipment performance."
       ],
       homeowner: [
-        "8–15% energy reduction; better comfort & control.",
-        "Often free after incentive."
+        "8–15% energy reduction; better comfort & control; maximizes efficiency of HEAR-rebated heat pumps.",
+        "Often free after incentive; essential for getting full value from federal investments."
       ],
       contractor: [
-        "Fast install; strong add-on to HVAC quotes.",
-        "Provide brief training for satisfaction."
+        "Fast install; strong add-on to HVAC quotes; recommend with all HEAR heat pump installations.",
+        "Provide brief training for satisfaction; explain optimization of federal rebate equipment."
       ]
     }
   },
 
   home_energy_assessment_and_certa: {
     title: "Home Energy Assessment & CERTA",
-    summary: "Gateway service; aligns projects and funding.",
+    summary: "Gateway service; aligns projects and funding; critical for HOMES rebate qualification.",
     impact_tags: ["Enablement","Pipeline"],
     cost_and_incentive_ratio: {
       audit_cost_usd: "439–615",
       rebate_usd: "250–500",
       coverage_percent: "50–100%",
-      certa_funding_usd: 2000
+      certa_funding_usd: 2000,
+      homes_requirement: "Energy modeling required for HOMES rebates"
     },
     equity_and_market_leverage: [
-      "CERTA removes repair barriers (e.g., wiring, rot).",
-      "Full audit coverage for CPF/multifamily expands equity."
+      "CERTA removes repair barriers (e.g., wiring, rot) enabling both state and federal rebate eligibility.",
+      "Full audit coverage for CPF/multifamily expands equity; assessments required for HOMES rebate applications."
     ],
     implementation_priorities: [
       "Standardize report & digital submission.",
@@ -396,16 +466,16 @@ const DATA = {
     ],
     stakeholder_value: {
       program_manager: [
-        "Use audits to prioritize multi-measure pathways.",
-        "Coordinate cross-funders for stackable support."
+        "Use audits to prioritize multi-measure pathways and qualify for HOMES rebates ($2k-$8k).",
+        "Coordinate cross-funders for stackable support (Energy Trust + CERTA + HEAR/HOMES)."
       ],
       homeowner: [
-        "Clear roadmap of upgrades & rebates.",
-        "Repairs covered via CERTA can 'unlock' insulation."
+        "Clear roadmap of upgrades & rebates; assessment unlocks HOMES performance-based rebates.",
+        "Repairs covered via CERTA can 'unlock' insulation and qualify for federal incentives."
       ],
       contractor: [
-        "Certified only; ensure complete data capture.",
-        "Plan multifamily logistics and documentation."
+        "Certified only; ensure complete data capture for both state and HOMES rebate applications.",
+        "Plan multifamily logistics and documentation; conduct energy modeling for HOMES eligibility."
       ]
     }
   }
@@ -556,8 +626,9 @@ function renderCards(){
 
     const costPills = Object.entries(cost_and_incentive_ratio).map(([k,v])=>{
       const label = k.replace(/_/g," ").replace(/\b\w/g,c=>c.toUpperCase());
-      return `<span class="pill" title="${label}">${label}: ${typeof v==='object'?JSON.stringify(v):fmtMoney(v)}</span>`;
+      return `<span class="pill" title="${label} (Approximate - Verify Current Amounts)">${label}: ${typeof v==='object'?JSON.stringify(v):fmtMoney(v)}</span>`;
     }).join("");
+    const costDisclaimer = `<p style="font-size:11px;color:var(--muted);margin:6px 0 0 0;"><em>⚠️ Approximate costs/incentives - verify current amounts with program administrators before purchasing</em></p>`;
 
     const tags = impact_tags.map(t=>`<span class="chip"><span class="dot ${badgeDots(t)}"></span>${t}</span>`).join("");
 
@@ -583,6 +654,7 @@ function renderCards(){
       <div class="row" style="margin-top:8px">${tags}</div>
 
       <div class="kv">${costPills}</div>
+      ${costDisclaimer}
 
       <div class="row">${eq}</div>
       <div style="height:6px"></div>
